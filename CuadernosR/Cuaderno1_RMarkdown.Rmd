@@ -1,0 +1,31 @@
+---
+title: "Cuadernos de RMarkdown"
+output: html_document
+---
+
+## Hacer un R markdown
+
+Para crear un nuevo cuaderno escojan la opcion File: New File: R Markdown. Si les pide instalar prerequisitos dejen que los instale y sigan las instrucciones. Si llega a haber un error, instalenlos por separados.
+
+## Para que sirven los cuadernos?
+
+1. Para dar clase
+2. Para ejemplificar uso de codigos o paqueterias
+
+
+## Uso de cuadernos
+
+Lo basico es hacer chunks en el menu Insert: R o ctrl + alt + I.
+
+```{r}
+x <- 1:10
+y <- x^2
+print(y)
+```
+
+```{r}
+plot(x, y)
+```
+
+Las graficas y resultados de los chuncks se procesan y se incluye el resultado en el documento.
+
