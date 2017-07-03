@@ -1,0 +1,58 @@
+---
+title: "Cuaderno1_UsoBasicoR"
+output: html_document
+---
+
+## Variables
+
+Usar el simbolo `<-` o `=` para asignar variables. El estilo recomendado en R es el primero.
+
+```{r}
+x <- 0
+x
+```
+
+```{r}
+x <- "hola"
+x
+```
+
+La unidad mas basica de procesamiento en R son los vectores que se obtienen concatenando elementos con la funcion `c()` y separando con comas. Son como las lista de Python pero todos los elementos deben ser del mismo tipo.
+
+```{r}
+x <- c(1,2,3,1,2,3)
+x
+```
+
+
+```{r}
+y <- c("hola", "adios")
+y
+```
+
+Todos los elementos de un vector deben ser del mismo tipo, pero R adivina el tipo si dan elementos de distintos tipos. Por ejemplon en el siguiente ejemplo los numeros se vuelven strings, llamados characters en R.
+
+```{r}
+x <- c(1,2,"hola")
+class(x)
+```
+
+Los vectores en R permiten hacer aritmetica puntual, es decir, pueden sumar, multiplicarse y dividirse elemento a elemento entre vectores del mismo tamano.
+
+```{r}
+x <- 1:4 # forma rapida de c(1,2,3,4)
+y <- c(-1,-2,-3,-4)
+```
+
+```{r}
+x + y
+```
+
+```{r}
+x * y
+```
+
+```{r}
+x / y
+```
+
