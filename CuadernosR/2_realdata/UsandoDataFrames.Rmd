@@ -1,0 +1,41 @@
+---
+title: "Data Frames"
+output: html_notebook
+---
+
+Vamos a descargar de la pagina de UCI Machine Learning repository la base de datos de Adults.
+
+Lo primero que hay que verificar es nuestro directorio actual de trabajo y modificarlo si necesario.
+
+```{r}
+getwd() # directorio actual
+```
+
+Con el comando `setwd` pondemos cambiar el directorio de trabajo. Por ejemplo
+
+```{r}
+setwd("C:/Users/mbtec/Documents/GitHub/PropedeuticoDataScience2017/CuadernosR/Cuaderno2")
+```
+
+En RStudio la maneta facil tambien es dar click en los 3 puntos `...` que aparecen en la ventana de Files, navegar al destino, y luego dar click en `More` y seleccionar la opcion `Set As Working Directory`. Alternativamente (mas facil) en el menu principal en `Session`. Otra opcion es trabajar siempre con proyectos que "fijan" el working directory. El working directory lo pueden cambiar cuantas veces quieran.
+
+### Bajar los datos
+
+```{r}
+download.file("https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data", "adultsdata.csv")
+```
+Alternativamente se puede descargar manualmente. Ahora hay que leerlo en R.
+
+```{r}
+adults <- read.csv("adultsdata.csv", header = FALSE)
+head(adults) # imprime las primeras lineas
+```
+
+Podemos accesar a las variables por numero de columna o por nombre. En este caso como usamos `header = FALSE` automaticamente R eligio los nombres V1, V2, etc.
+
+Por ejemplo, podemos rapidamente hacer una grafica de la variable education que es la CUARTA variable.
+
+```{r}
+plot(adults$V4)
+```
+
