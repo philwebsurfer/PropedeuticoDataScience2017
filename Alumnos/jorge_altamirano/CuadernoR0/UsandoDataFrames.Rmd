@@ -1,0 +1,26 @@
+---
+title: "Usando Data Frames"
+output:
+  html_notebook: default
+---
+#Introducción
+
+Usando una base de datos de ejemplo de UCI Machine learning en la base de datos Adults.
+
+#Desarrollo
+
+##Descargando la base de datos e imprimiéndola
+```{r}
+download.file("https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data", "adult.data")
+download.file("https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.names", "adult.names")
+adults = read.csv("adult.data", header = FALSE)
+head(adults)
+```
+
+###Gráfica de ejemplo
+
+Ploteando una gráfica
+```{r}
+plot(adults$V4)
+```
+
