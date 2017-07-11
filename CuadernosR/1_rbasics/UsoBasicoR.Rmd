@@ -1,6 +1,6 @@
 ---
-title: "Cuaderno1_UsoBasicoR"
-output: html_document
+title: "Tipos de datos en R"
+output: html_notebook
 ---
 
 ## Variables
@@ -54,5 +54,141 @@ x * y
 
 ```{r}
 x / y
+```
+
+## Los tipos de datos en R
+
+Los tipos de datos en R estan basados en los tipos de datos "estadisticos". La unidad basica en R son los vectores. Un dato solo es un vector de longitud "1". Los posibles tipos de vectores son:
+
+* character (strings/texto)
+* numeric (datos continuos numericos)
+* integer (enteros)
+* logical (TRUE/FALSE)
+* (el raro) factor (el uso es como variable categorica, se especifican las posibles categorias)
+* (tambien raro) ordered (es un factor pero las categorias tienen un orden)
+
+
+#### Ejemplos:
+
+
+```{r}
+x <- 10:15
+print(x)
+print(class(x))
+```
+
+```{r}
+print(class(3.1))
+print(class(c(0.0, 0.1)))
+```
+
+Hay recoversion automatica
+
+```{r}
+x <- c(1,2) + 2.5
+print(x) # c(1,2) integer se vuelve numeric al suma 2.5
+print(class(x))
+```
+
+## Listas
+
+Las listas, a diferencias los vectores, pueden tener elementos de distintos tipos. Se construyen con la funcion `list`, pueden contener vectores, o cualquier tipo vector en sus entradas.
+
+```{r}
+mylist <- list(1:10, letters[1:5], c(TRUE, TRUE, FALSE))
+print(mylist)
+```
+
+Una diferencia importante con los vectores, es que mientras los elementos de un vectores se acceden con corchetes simples, los elementos de una lista con doble corchete.
+
+```{r}
+mylist[[2]]
+```
+
+Las listas pueden asignar nombres a cada uno de sus elementos.
+
+```{r}
+mylist2 <- list(
+  enteros = 1:10, 
+  letras = letters[1:5], 
+  booleanos = c(TRUE, TRUE, FALSE)
+)
+```
+
+Ahora puedo acceder a cada elemento de la lista por su nombre, ya sea usando dobles corchetes, o el signo de pesos.
+
+```{r}
+mylist2$letras
+```
+
+
+```{r}
+mylist2[["enteros"]]
+```
+
+## DataFrames o Bases de Datos
+
+Un caso particular de listas es un data frame. Pero es el mas importante y todo R esta disenado para funcionar con data frames. Son listas donde todos los elementos son vectores y todos son del mismo tanmano, es como un "array" con muchos tipos datos, y cada elemento de la lista se interpreta como COLUMNA.
+
+```{r}
+mydata <- data.frame(
+  peso = c(76, 66, 70), #kilogramos
+  altura = c(173, 170, 155), #centrimetros
+  sexo = c("H", "M", "M")
+)
+mydata
+```
+
+```{r}
+print(class(mydata))
+```
+
+Hay muchos metodos hechos ya para data.frames
+
+```{r}
+pairs(mydata) # hace un scatterplot para a par
+```
+
+Acceden a las variables es igual que con listas
+
+```{r}
+mydata$sexo
+```
+
+Por default los data.frames se crean los strings como factores, hay dos formas de cambiar ese comportamiento:
+1) Usando la opcion `stringsAsFactors = FALSE` al crear el data.frame
+2) O haciendo una conversion posterior con `as.character()`
+
+```{r}
+print(class(mydata$sexo))
+print(class(as.character(mydata$sexo)))
+```
+
+Los nombres de los data.frames (y de las listas) se accede (y cambian) con la funcion names
+
+```{r}
+names(mydata)
+```
+
+```{r}
+names(mydata) <- c("Peso", "Altura", "Sexo")
+```
+
+```{r}
+mydata
+```
+
+Los data.frames a diferencia de las listas, tambien tienen row.names,
+
+```{r}
+row.names(mydata) <- paste("Sujeto", 1:3)
+mydata
+```
+
+Y pueden acceder a un dato por fila y variable
+
+
+```{r}
+mydata["Sujeto 1", "Peso"]
 ```
 
