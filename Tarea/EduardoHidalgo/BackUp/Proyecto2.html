@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Temario</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0" />
+    <style type="text/css">
+        body {
+            font-size: 14px;
+            font-family: Tahoma, Geneva, sans-serif;
+            margin: 1cm;
+            max-width: 800px;
+        }
+
+        p {
+            text-align: justify;
+        }
+
+        hr {
+            border-color: Azure;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #145a32;
+            font-weight: bold;
+        }
+
+        small {
+            color: #777;
+            font-weight: normal;
+        }
+
+        code {
+            color: #c7254e;
+            background-color: #f9f2f4;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Proyecto 2</h1>
+    <h2>Curso Propedéutico 2017 <br> Maestría en Ciencias de Datos 2017 <br><small>Instructor: Mauricio Benjamín García Tec</small></h2>
+
+    <p>El proyecto consta de dos partes en las que se evaluará:
+        <ol>
+            <li>Conocimiento teórico de Álgebra Lineal</li>
+            <li>Aplicaciones de la Descomposición en Valores Singulares (SVD) a sistemas de ecuaciones y aproximación de matrices
+                (reducción/comprensión de información) usando <code>Python</code> y la librería <code>numpy</code>.</li>
+        </ol>
+    </p>
+    <p>La <strong>fecha de entrega</strong> es el <strong>domingo 2 de julio a las 11:59pm</strong> al correo electrónico mencionado.
+        Si no contestan todas las preguntas del proyecto, entreguen lo más que hayan completado.</p>
+
+    <p>El <strong>formato de entrega</strong> de ambas partes será en un <strong>cuaderno de Jupyter</strong> titulado <code>Tarea2.pynb</code>        que pondrán en el repositorio de Github de la clase en la carpeta <code>Alumnos/&lt;su nombre&gt;/</code>. Deberán
+        generar un pull request.</p>
+
+    Los cuadernos de Jupyter permiten escribir matemáticas usando MathJax (una versión de <strong>Latex</strong> para HTML).
+    Idealmente sus respuestas deberán usar <strong>MathJax</strong>, de no ser posible, usen caractéres normales.
+
+    <!-- #_______________________________________________________________________________________# -->
+    <!-- #_______________________________________________________________________________________# -->
+    <h2>Parte 1: Teoría de Álgebra Lineal y Optimización</h2>
+    <p>En esta sección se verificará que se tiene un conocimiento básico de Álgebra Lineal.</p>
+    <p>Deberán contestar brevemente las siguientes preguntas, intentando resaltar el aspecto intuitivo y no definiciones abstractas:</p>
+    <ol>
+        <li>¿Por qué una matriz equivale a una transformación lineal entre espacios vectoriales?</li>
+        <li>¿Cuál es el efecto de transformación lineal de una matriz diagonal y el de una matriz ortogonal?</li>
+        <li>¿Qué es la descomposición en valores singulares de una matriz?</li>
+        <li>¿Qué es diagonalizar una matriz y que representan los eigenvectores?</li>
+        <li>¿
+            <u>Intuitivamente</u> qué son los eigenvectores?</li>
+        <li>¿Cómo interpretas la descomposición en valores singulares como una composición de tres tipos de transformaciones
+            lineales simples?</li>
+        <li>¿Qué relación hay entre la descomposición en valores singulares y la diagonalización?</li>
+        <li>¿Cómo se usa la descomposición en valores singulares para dar un aproximación de rango menor a una matriz?</li>
+        <li>Describe el método de minimización por descenso gradiente</li>
+        <li>Menciona 4 ejemplo de problemas de optimización (dos con restricciones y dos sin restricciones) que te parecan interesantes como Científico de Datos</li>
+    </ol>
+
+    <h2>Parte 2: Aplicaciones en Python</h2>
+
+    <p>Van a mostrar tres aplicaciones de la SVD y optimizacíon. Recuerden que la multiplicación matricial en numpy es con la función <code>numpy.multiply</code>.</p>
+
+    <ol>
+        <li>Se mostrará una aplicación de la SVD a la compresión de imágenes y reducción de ruido. Podrán usar la función <code>numpy.linalg.svd</code>, pueden consultar la ayuda en <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.linalg.svd.html">este link</a>. <br> Una imagen puede verse como un arreglo de <code>m x n</code> entradas donde cada entrada representa un pixel. El caso más sencillo es el caso de imágenes en blanco y negro, donde cada entrada toma un valor en el intervalo <code>(0,1)</code> que representa una escala de gris desde negro hasta blanco. Una imagen en este caso es simplemente una matriz numérica con coeficientes en <code>(0,1)</code>. Este proyecto
+        es más sencillo cuando se trabaja exclusivamente en blanco y negro. Hace el proyecto con imágenes a color es totalmente
+        optativo y no es requerido. <br>
+        Deberán hacer un script de <code>Python</code> que realicen las siguientes tareas:
+        <ul>
+            <li>Recibir el <em>path</em> de un archivo de imagen <code>png</code> y convertirlo en una matriz numérica que represente
+                a la versión en blanco y negro de la imagen. Ayuda <a href="https://stackoverflow.com/questions/27026866/convert-an-image-to-2d-array-in-python">aquí.</a></li>
+            <li>Realizar y verificar la descomposición <code>svd</code>.
+            <li>Usar la descomposición para dar una aproximación de grado <code>k</code> de la imagen.</li>
+            <li>Para alguna imagen de su elección, elegir distintos valores de aproximación a la imagen original.</li>
+            <li>Contestar, ¿qué tiene que ver este proyecto con compresión de imágenes?</li>
+        </ul></li>
+        <li> Ahora veremos la aplicación a pseudoinversa y sistemas de ecuaciones
+            <ul>
+                <li> Programar una función que dada cualquier matriz devuelva la pseudainversa usando la descomposición SVD. Hacer otra función que resuelva cualquier sistema de ecuaciones de la forma Ax=b usando esta pseudoinversa.</li>
+            <li>Jugar con el sistema Ax=b donde A=[[1,1],[0,0]] y b puede tomar distintos valores. (a) Observar que pasa si b esta en la imagen de A (contestar cuál es la imagen) y si no está (ej. b = [1,1]). (b) Contestar, ¿la solución resultante es única? Si hay más de una solución, investigar que carateriza a la solución devuelta. (c) Repetir cambiando A=[[1,1],[0,1e-32]], ¿En este caso la solucíon es única? ¿Cambia el valor devuelto de x en cada posible valor de b del punto anterior?
+                </li>
+            </ul>
+        </li>
+        <li>En este ejercicio usarán la paquetería <code>pandas</code> para trabajar con datos <a href="https://www.datacamp.com/community/tutorials/pandas-tutorial-dataframe-python#gs.GSZxILw">link a introducción a pandas</a>, programarán un ajuste de mínimos cuadrados.
+        <ul>
+            <li>Deben programar un <emph>script</emph> que lea el archivo <a href="https://github.com/mauriciogtec/PropedeuticoDataScience2017/blob/master/Tarea/study_vs_sat.csv">study_vs_sat.csv</a> y lo almacene como un <emph>data frame</emph> de pandas.</li>
+            <li>Pleantear como un problema de optimización que intente hacer una aproximación de la forma <code>sat_score ~ alpha + beta*study_hours</code> minimizando la suma de los errores de predicción al cuadrado, <a href="https://en.wikipedia.org/wiki/Simple_linear_regression">pueden consultar este link</a></li> ¿Cuál es el gradiente de la función que se quiere optimizar (hint: las variables que queremos optimizar son alpha y beta)?
+            <li>Programar una función que reciba valores de alpha, beta y el vector sat_score y devuelva un vector array de numpy de predicciones <code>alpha + beta*study_hours_i</code>, con un valor por cada individuo</li>
+            <li>Definan un numpy array X de dos columnas, la primera con unos en todas sus entradas y la segunda con la variable study_hours. Observen que <code>X*[alpha,beta]</code> nos devuelve <code>alpha + beta*study_hours_i</code> en cada entrada y que entonces el problema se vuelve <code>sat_score ~ X*[alpha,beta]</code>
+            <li>Calculen la pseudoinversa  X^+ de X y computen <code>(X^+)*sat_score</code> para obtener alpha y beta soluciones.</li> 
+            <li>Comparen la solución anterior con la de la fórmula directa de solución exacta <code>(alpha,beta)=(X^t*X)^(-1)*X^t*study_hours</code>.</li>
+            <li><strong>(Avanzado)</strong> Usen la libreria <code>matplotlib</code> par visualizar las predicciones  con alpha y beta solución contra los valores reales de sat_score.</li>
+            <li><strong>(Muy avanzado)</strong> Programen el método de descenso gradiente para obtener alpha y beta por vía de un método numérico de optimización. Experimenten con distintos learning rates (tamaños de paso). </li>
+            
+        </ul>
+        </li>
+    </ol>
+    <!-- #_______________________________________________________________________________________# -->
+</body>
+
+</html>
