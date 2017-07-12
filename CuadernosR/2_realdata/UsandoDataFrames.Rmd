@@ -14,7 +14,7 @@ getwd() # directorio actual
 Con el comando `setwd` pondemos cambiar el directorio de trabajo. Por ejemplo
 
 ```{r}
-# setwd("C:/Users/mbtec/Documents/GitHub/PropedeuticoDataScience2017/CuadernosR/Cuaderno2")
+# setwd("C:/Users/mbtec/Documents/GitHub/PropedeuticoDataScience2017/CuadernosR/2_realdata")
 ```
 
 En RStudio la maneta facil tambien es dar click en los 3 puntos `...` que aparecen en la ventana de Files, navegar al destino, y luego dar click en `More` y seleccionar la opcion `Set As Working Directory`. Alternativamente (mas facil) en el menu principal en `Session`. Otra opcion es trabajar siempre con proyectos que "fijan" el working directory. El working directory lo pueden cambiar cuantas veces quieran.
@@ -36,10 +36,79 @@ Podemos accesar a las variables por numero de columna o por nombre. En este caso
 Manualmente podemos elegir nombres
 
 ```{r}
-names(adults) <-  c("age", "workclass", "fnlwgt", "education",
-"education_num", "marital_status", "occupation", "relationship",
-"race", "sex", "capital_gain", "capital_loss", "hours_per_week", "native_country","uji")
+names(adults) <-  c("age", "workclass", "fnlwgt", "education", "education_num", "marital_status", "occupation", "relationship", "race", "sex", "capital_gain", "capital_loss", "hours_per_week", "native_country","uji")
 head(adults)
 ```
 
+
+Para accesar los datos pueden usar `$` o `[[]]` como en listas.
+
+```{r}
+table(adults$native_country)
+```
+
+En general pueden saber mucho de un data frame con la funcion summary (en teoria, pero nunca le he encontrado practica...)
+
+```{r}
+summary(adults)
+```
+
+### Analisis de covarianzas
+
+Vamos a elegir una submatriz de datos con solo tres variables para ejemplificar conceptos
+
+```{r}
+# un espacio en blanco equivale tomar todas las filas o columnas segun
+# en donde este
+adults2 <- adults[ ,c("age", "education_num", "hours_per_week")]
+#podemos agregar variables nuevas asi
+adults2$uji_numeric <- as.numeric(adults$uji) # es un ejemplo: careful
+head(adults2)
+```
+
+Vamos a ver la matriz de covarianzas:
+
+```{r}
+cov(adults2)
+```
+
+La matriz de covarianzas no es muy util.... Es mas util ver correlaciones
+
+```{r}
+cor(adults2)
+```
+
+Otra manera de visualizarlo
+
+```{r}
+pairs(adults2)
+```
+
+### Podrian predecir el ingreso con la edad, educacion y horas trabajas?
+
+Para esto se usan las regresiones lineales (mas detalles manana y jueves)
+
+```{r}
+mod <- lm(uji_numeric ~ ., data = adults2) # el punto significa todas las demas
+summary(mod)
+```
+
+```{r}
+plot(
+  mod$fitted.values, 
+  adults2$uji_numeric,
+  main = "prediccion vs reales"
+)
+```
+
+### A mano
+
+```{r}
+X <- adults2[ ,1:3]
+Y <- adults2$uji_numeric
+X$ones <- 1
+X <- as.matrix(X)
+beta <- solve(t(X)%*%X, t(X)%*%Y)
+beta
+```
 
