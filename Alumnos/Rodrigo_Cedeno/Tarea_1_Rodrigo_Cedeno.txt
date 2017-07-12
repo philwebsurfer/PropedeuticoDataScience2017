@@ -1,0 +1,181 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 class Array:\
+    "Una clase minima para algebra lineal"    \
+    def __init__(self, list_of_rows): \
+        "Constructor y validador"\
+        # obtener dimensiones\
+        self.data = list_of_rows\
+        nrow = len(list_of_rows)\
+        #  ___caso vector: redimensionar correctamente\
+        if not isinstance(list_of_rows[0], list):\
+            nrow = 1\
+            self.data = [[x] for x in list_of_rows]\
+        # ahora las columnas deben estar bien aunque sea un vector\
+        ncol = len(self.data[0])\
+        self.shape = (nrow, ncol)\
+        # validar tamano correcto de filas\
+        if any([len(r) != ncol for r in self.data]):\
+            raise Exception("Las filas deben ser del mismo tamano")\
+        \
+    #Regresar el tama\'f1o de una matriz\
+    def __getitem__(self, idx):\
+        return self.data[idx[0]][idx[1]]\
+\
+    #Sustituir uno de los valores de una matriz\
+    def __setitem__(self, idx, new_value):\
+        self.data[idx[0]][idx[1]] = new_value\
+\
+    #Funci\'f3n para regresar una matriz cuando no se pida print y solo se llame a la variable\
+    def __repr__(self):\
+        return_string = ""\
+        for row in self.data:\
+            return_string = return_string + str(row) + '\\n'\
+        return return_string\
+\
+    #Funci\'f3n para regresar una matriz cuando se pida "print"\
+    def __str__(self):\
+        return_string = ""\
+        for row in self.data:\
+            return_string = return_string + str(row) + '\\n'\
+        return return_string\
+    \
+    #Funci\'f3n para transponer matriz\
+    def transpose(self):\
+        return_transp = ""\
+        transp_mat = [[x[i] for x in self.data] for i in range(len(self.data[0]))]\
+        for transp in transp_mat:\
+            return_transp = return_transp + str(transp) + '\\n'\
+        print (return_transp)\
+        \
+    def __add__(self, other):\
+        "Hora de sumar"\
+        if isinstance(other, Array):\
+            if self.shape != other.shape:\
+                raise Exception("Las dimensiones son distintas!")\
+            rows, cols = self.shape\
+            newArray = Array([[0. for c in range(cols)] for r in range(rows)])\
+            for r in range(rows):\
+                for c in range(cols):\
+                    newArray.data[r][c] = self.data[r][c] + other.data[r][c]\
+            return newArray\
+        elif isinstance(2, (int, float, complex)): # en caso de que el lado derecho sea solo un numero\
+            rows, cols = self.shape\
+            newArray = Array([[0. for c in range(cols)] for r in range(rows)])\
+            for r in range(rows):\
+                for c in range(cols):\
+                    newArray.data[r][c] = self.data[r][c] + other\
+            return newArray\
+        else:\
+            return NotImplemented # es un tipo de error particular usado en estos metodos\
+\
+    def __sub__(self, other):\
+        "Hora de restar"\
+        if isinstance(other, Array):\
+            if self.shape != other.shape:\
+                raise Exception("Las dimensiones son distintas!")\
+            rows, cols = self.shape\
+            newArray = Array([[0. for c in range(cols)] for r in range(rows)])\
+            for r in range(rows):\
+                for c in range(cols):\
+                    newArray.data[r][c] = self.data[r][c] - other.data[r][c]\
+            return newArray\
+        elif isinstance(2, (int, float, complex)): # en caso de que el lado derecho sea solo un numero\
+            rows, cols = self.shape\
+            newArray = Array([[0. for c in range(cols)] for r in range(rows)])\
+            for r in range(rows):\
+                for c in range(cols):\
+                    newArray.data[r][c] = self.data[r][c] - other\
+            return newArray\
+        else:\
+            return NotImplemented # es un tipo de error particular usado en estos metodos       \
+\
+    def __mul__(self, other):\
+        "Hora de multiplicar"\
+        if isinstance(other, Array):\
+            if len(self.data[0]) != len(other.data):\
+                raise Exception("Las dimensiones son incorrectas para multiplicaci\'f3n!")\
+            rows, cols = self.shape\
+            rows2, cols2 = other.shape\
+            newArray = Array([[0. for c in range(cols)] for r in range(rows)])\
+            for r in range(len(self.data)):\
+                for c in range(len(other.data[0])):\
+                    for d in range(len(other.data)):\
+                        newArray.data[r][c] += (self.data[r][d]*other.data[d][c])\
+            return newArray\
+        elif isinstance(2, (int, float, complex)): # en caso de que el lado derecho sea solo un numero\
+            rows, cols = self.shape\
+            newArray = Array([[0. for c in range(cols)] for r in range(rows)])\
+            for r in range(rows):\
+                for c in range(cols):\
+                    newArray.data[r][c] = self.data[r][c] * other\
+            return newArray\
+        else:\
+            return NotImplemented # es un tipo de error particular usado en estos metodos\
+        \
+    #Hace posible sumar si la suma comienza con un integer (o sea en cero)\
+    def __radd__(self,other):\
+        if other == 0:\
+            return self\
+        else:\
+            return self.__add__(other)\
+        \
+    #Hace posible restr si la resta comienza con un integer (o sea en cero)\
+    def __rsub__(self,other):\
+        if other == 0:\
+            return self\
+        else:\
+            return self.__sub__(other)\
+    \
+    def __rmul__(self,other):\
+        if other == 0:\
+            return self\
+        else:\
+            return self.__sub__(other)\
+        \
+    #Imprime una matriz de ceros del tama\'f1o que se indique\
+    def zeros(rows,columns):\
+        cols = [0 for columns in range(columns)]\
+        zero_mat = ""\
+        for r in range(rows):\
+            zero_mat = zero_mat + str(cols) + '\\n'\
+        return zero_mat\
+\
+    #Imprime matriz de identidad\
+    def eye(n):\
+        cols_i = [0 for n in range(n)]\
+        zero_mat = ""\
+        count = 0\
+        for r in cols_i:\
+            cols_i[count]=1\
+            cols_i[count-1]=0\
+            zero_mat = zero_mat + str(cols_i) + '\\n'\
+            count = count + 1\
+        print (zero_mat)\
+    \
+class Vector(Array): # declara que Vector es un tipo de Array\
+    def __init__(self, list_of_numbers):\
+        self.vdata = list_of_numbers\
+        list_of_rows = [[x] for x in list_of_numbers]\
+        return Array.__init__(self, list_of_rows)\
+    def __repr__(self):\
+        return "Vector(" + str(self.vdata) + ")"\
+    def __str__(self):\
+        return str(self.vdata)\
+    def __add__(self, other):\
+        new_arr = Array.__add__(self, other)\
+        return Vector([x[0] for x in new_arr.data])\
+    def __sub__(self, other):\
+        new_arr = Array.__sub__(self, other)\
+        return Vector([x[0] for x in new_arr.data])\
+    def __mul__(self, other):\
+        new_arr = Array.__mul__(self, other)\
+        return Vector([x[0] for x in new_arr.data])\
+    def __rmul__(self, other):\
+        new_arr = Array.__mul__(self, other)\
+        return Vector([x[0] for x in new_arr.data])}
