@@ -1,0 +1,61 @@
+---
+title: "PCA Inegi"
+output:
+  html_document: default
+---
+
+## Generar con datos de Inegi 
+
+Leer los datos
+
+```{}
+inegi <- read.table(file="C:/Users/Data Mining/Documents/ITAM/Propedeutico/Alumnos/PropedeuticoDataScience2017/Alumnos/Leonardo_Marin/DatosINEGI.csv",sep=",",header=TRUE,row.names = "Estado")
+str(inegi) ## Estructura de la tabla
+
+```
+
+Visualizar los datos
+
+```{}
+head(inegi)
+```
+
+Tratamiento a los datos
+
+```{}
+for ( col in c("Secundarias","DefuncionesGenerales","Nacimientos","Divorcios","Matrimonios"))
+{ inegi[,col] <- inegi[,col] / inegi[,"Poblacion"] }
+```
+
+Asignar los datos a una Matrix "X" y
+Eliminar la variable de Población
+
+```{}
+X <- inegi
+X$Poblacion <- NULL
+```
+
+
+## Modelo
+
+Instalar paquete para ejecutar PCA y cargar librería
+
+```{}
+##install.packages("FactoMineR")
+library(FactoMineR)
+```
+
+Sintaxis para modelo
+
+
+```{}
+inegi.pca <- PCA(X)
+```
+
+Imprimir explicitamente el objeto asignado al modelo  
+
+
+```{}
+plot(inegi.pca)
+```
+
