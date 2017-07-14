@@ -1,0 +1,52 @@
+---
+title: " Ejercicio PCA"
+output: html_document
+---
+
+
+## Alejandro Hernández Farías
+
+
+
+Para este ejercicio estoy utilizando una base de datos de 100 paises obtenida de la siguiente liga:
+
+<http://wiki.stat.ucla.edu/socr/index.php/SOCR_Data_2008_World_CountriesRankings> 
+
+Considerando las siguientes variables: Grupo de Ingreso (GpoIngr), Grupo de Población (GpoPob), Región, Dinamismo económico (DE), Educación (Edu), Índice de Salud (IS), Calidad de Vida (CVida) y Ambiente político (Pol):
+
+```{r}
+paises <- read.table("C:/Users/ahernandez/PCA/paises.txt")
+head(paises)
+```
+
+Para tener una idea de los datos que están de la base:
+```{r}
+summary(paises)
+```
+
+Para hacer el análisis de __componentes principales__ vamos a considerar sólo las variables cuantitativas y vamos a acotarlo a los paises de Europa; es decir, las regiones de Europa del Sur, Europa Central y Europa del Norte:
+
+```{r}
+europa<-paises[paises$Region=="Sur_Europa" | paises$Region=="Europa_Central" | paises$Region=="Norte_Europa" ,4:8]
+europa
+
+```
+
+Instalamos la librería FactoMineR `install.packages("FactoMineR")` y la llamamos para hacer el PCA:
+
+
+```{r}
+library("FactoMineR")
+model <- PCA(europa)
+
+```
+
+### Conclusiones
+
+En primera instancia podemos ver que con la primer compontente se explica el 76.12% de la variabilidad de los datos.
+
+Con respecto a los paises, podemos apreciar que existen agrupaciones de los mismos que nos son familiares como Lithuania, Estonia, Latvia, Polonia, Republica Checa y Slovaquia. 
+
+Asimismo, existe otro grupo de paises más desarrollados cuya agrupación también nos resulta familiar como Alemania, Holanda, Dinamarca, Suecia, Noruega, Austria y España.
+
+Por otro lado, relativo a las variables vemos que casi no hay relación entre educación e índice de salud, pero sí existe relación entre dinamismo económico y ambiente político, entre ambiente político y calidad de vida y entre calidad de vida e índice de salud.
