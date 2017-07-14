@@ -45,7 +45,7 @@ library(FactoMineR)
 model <- PCA(X)
 ```
 
-
+ 
 
 
 
