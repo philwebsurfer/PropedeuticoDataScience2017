@@ -1,10 +1,10 @@
 ---
 title: "R Notebook"
 output:
-  word_document: default
+  html_document: default
   html_notebook: default
   pdf_document: default
-  html_document: default
+  word_document: default
 ---
 
 #PCA in Action
@@ -27,7 +27,7 @@ Es importante limpiar los datos... guardando en una matriz x las variables numé
 
 ```{r}
 x = inegi[, -(1:3)]
-print(x)
+row.names(x) = inegi$Estado
 library(FactoMineR)
 model = PCA(x)
 ```
