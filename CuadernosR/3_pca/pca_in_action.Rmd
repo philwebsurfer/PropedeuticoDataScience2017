@@ -1,0 +1,48 @@
+---
+title: "PCA en Accion"
+output: html_notebook
+---
+
+Vamos a usar datos del INEGI de nuestro repositorio
+
+```{r}
+INEGI <- read.csv(url("https://raw.githubusercontent.com/mauriciogtec/PropedeuticoDataScience2017/master/Datos/DatosINEGI.csv"))
+head(INEGI)
+```
+
+Las variables que necesitamos hacer per capita para poder hacer un analisis son Secundarias, DefuncionesGenerales, Nacimientos, Divorcios, Matrimonios.
+
+```{r}
+for (col in c("Secundarias", "DefuncionesGenerales", "Nacimientos", "Divorcios", "Matrimonios")) {
+  INEGI[ ,col] <- INEGI[ ,col]  / INEGI[ ,"Poblacion"] 
+}
+```
+
+Es importante siempre limpiar bien los datos.
+
+Vamos a guardar en una matriz de datos X las variables numericas que queremos analizar (todas menos Estado y Poblacion), y vamos a guardar Estado como row.names.
+
+```{r}
+X <- INEGI[ ,-(1:2)] # le quita las primeras dos columnas INEGI | 1:2 = c(1,2)
+row.names(X) <- INEGI$Estado
+head(X)
+```
+
+Ahora vamos a usar la paqueteria **FactoMineR** para hacer componentes principales. Es muy completa y bonita.
+
+Si no la tienen instalada usar
+
+```{r}
+# install.packages("FactoMineR")
+```
+
+Y una vez instalada la cargamos con 
+
+```{r}
+library(FactoMineR)
+```
+
+```{r}
+model <- PCA(X)
+```
+
