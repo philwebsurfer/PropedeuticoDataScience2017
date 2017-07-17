@@ -1,0 +1,351 @@
+---
+title: "Tarea 3"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+```{r}
+pdf.options(useDingbats = TRUE)
+```
+
+# 1. Sección teórica
+
+## 1.1. Plantear el problema de regresión como uno de mínimos cuadrados
+
+Al buscar una $\hat{\beta}$ que minimice la norma del vector $\varepsilon$ que es la diferencia entre $Y$ y $X\beta$, el problema, como se plantea es el siguiente:
+
+$$
+\hat{\beta}=argmax_{\beta \epsilon \Re^p} \Vert{Y-X\beta}\Vert^2
+$$
+Partiendo de este punto, desarrollemos estas ecuaciones:
+$$
+ \Vert{Y-X\beta}\Vert^2
+$$
+$$
+ \Big( \sqrt{(Y-X\beta)(Y-X\beta)}\Big)^2 = (Y-X\beta)(Y-X\beta)
+$$
+$$
+ Y'Y -\beta'X'Y -Y'X\beta+\beta'X'X\beta 
+$$
+Donde $(-\beta'X'Y)_{1 \times 1}$ dado que $\beta'_{1\times k}$, $X'_{k\times n}$ y $Y_{n\times 1}$ y de la misma forma $(-Y'X\beta)_{1 \times 1}$. Por lo tanto, definamos la función $F_{(\beta)}$
+
+$$
+F_{(\beta)}=Y'Y -2Y'X\beta+\beta'X'X\beta
+$$
+Si derivamos con respecto a $\beta$, obtenemos:
+$$
+\frac{dF_{(\beta)}}{d\beta} = -2Y'X\beta+\beta'X'X\beta
+$$
+Y donde su condición de primer orden son las ecuaciones normales de mínimos cuadrados ordinarios:
+$$
+(X'X)\beta = X'Y
+$$
+Y si X'X es invertible, la solución teórica a este problema es:
+$$
+\hat{\beta}=(X'X)^{-1}X'Y
+$$
+
+### ¿Por qué este planteamiento nos da un ajuste lineal a nuestros datos?
+Este planteamiento nos da un ajuste lineal a los datos porque el vector $\hat{\beta}$ óptimo obtenido a través del problema anterior en combinación lineal con las columnas $X$ permiten construir $Y$ al mismo tiempo que se tiene una distancia (norma) entre $Y$ y $X\hat{\beta}$ mínima. 
+
+### ¿Podríamos usarlo para ajustar polinomios (ej. $y =x^2$)? 
+
+Sí, porque el planteamiento de mínimo cuadrados es lineal en el sentido de que se pueda expresar Y como una combinación lineal de la información en $X$. 
+
+## 1.2. Argumentar la relación entre la solución encontrada y un problema de proyección en subespacios vectoriales de álgebra lineal. 
+
+La solución encontrada es una proyección de la variable $Y$ sobre el espacio vectorial de las $X$. El problema en sí es encontrar la proyección de ese vector $Y$ de tal forma que la distancia entre la proyección y el vector sea mínima. 
+
+El error, o la diferencia entre esa proyección y el vector es lo que estamos minimizando, ya sea interpretándolo como una norma mínima o como una varianza mínima.
+
+### ¿Cuál es la relación particular con el teorema de Pitágoras?
+
+Otra forma de escribir las ecuaciones normales de mínimos cuadrados es:
+$$
+(X'X)\beta = X'Y
+$$
+$$
+0 = X'Y-X'X\beta=X'(Y-X\beta)
+$$
+Que es igual a:
+$$
+X'\varepsilon = 0
+$$
+Es decir, las información de las variables explicativas y los errores son ortogonales, pues su producto punto es 0.
+
+Visto de otra forma, cuando se tiene una $\beta$ que minimiza la distancia entre el vector $Y$ y su proyección $X\beta$ en el plano de las $X$, $\varepsilon$ es ortogonal a esa proyección.
+
+Su relación con el teorema de pitágoras es que dada la fórmula para calcular el ángulo entre dos vectores:
+
+$$
+cos \theta= \frac{<a,b>}{\Vert a\Vert \Vert b\Vert}
+$$
+En el caso de que $\theta$ es $\frac{\pi}{2}$ (ángulo recto), se requiere que $<a,b>$ sea igual a cero. En este caso, $X'\varepsilon$ son ortogonales y representan dos catetos con $Y$ de hipotenusa.
+
+Cuando se cumple esta condición, significa que $X\beta$ es una proyección de $Y$ sobre el plano de las $X$.
+
+## 1.3. ¿Qué logramos al agregar una columna de unos en la matriz $X$?
+
+Dado que $X$ solo está compuesto de columnas con distintas variables, toda combinación lineal de ellas que está forzada a pasar por el vector $0$ cuando los coeficientes $\beta_{i}$ sean iguales a cero
+
+## 1.4. Plantear el problema de regresión ahora como un problema de estadística
+
+Desde una perspectiva estadística, el problema consiste en poder explicar una variable a través de una combinación lineal de otras variables, minimizando el error que existe entre el resultado de esa combinación lineal y la variable.
+
+$$
+Y_{i}=X_{i}\beta_{i} + \varepsilon_{i}
+$$
+Dado que $\varepsilon_{i}$ puede tomar valores positivos o negativos, para encontrar un conjunto de parámetros $\beta$ que junto con las observaciones $X$ y minimicen el error entre la predicción y lo observado, debe usarse el término de error al cuadrado, de tal forma que: 
+$$
+\sum^n_{i=1}\varepsilon^2_{i} = \sum^n_{i=1}(Y_{i}-X{i}{\beta_{i}})^2
+$$
+## 1.5. ¿Cuál es la función de verosimilitud del problema anterior? 
+
+Asumiendo que cada una de las desviaciones $\epsilon_{i} \sim (N,\sigma^2)$, entonces la función de verosimilitud es:
+$$
+\prod^n_{i=1} L_{i(\beta,\sigma^2)}= \frac {1}{{\sigma \sqrt {2\pi } }}e^{-\frac{(Y_{i}-X_{i}\beta)^2}{2\sigma^2}}
+$$
+O bien,
+$$
+L_{(\beta,\sigma^2)}= \left( \frac{1}{{\sigma \sqrt {2\pi } }} \right)^n e^{-\frac{\sum_{i=1}^n(Y_{i}-X_{i}\beta)^2}{2\sigma^2}}
+$$
+
+## 1.6. Mostrar que la solución de máxima verosimilitud es la misma que la del problema de mínimos cuadrados.
+
+Obteniendo logaritmo (transformación lineal que no afecta el orden en la función) de la ecuación anterior:
+
+$$
+lnL_{(\beta,\sigma^2)}= -\frac{n}{2} ln (2\pi) - \frac{n}{2} ln (\sigma^2) -\frac{\sum_{i=1}^n(Y_{i}-X_{i}\beta)^2}{2\sigma^2}
+$$
+
+Si se deriva L con respecto a los parámetros para obtener parámetros óptimos en los que se maximiza la probabilidad de que las $\varepsilon$ provienen de esa distribución:
+
+$$
+\frac{\partial lnL_{(\beta,\sigma^2)}}{ \partial \beta}= \frac{\partial}{\partial\beta} \left( -\frac{\sum_{i=1}^n(Y_{i}-X_{i}\beta)^2}{2\sigma^2} \right) =0
+$$
+Dado que $-2\sigma^2$ no depende de $\beta$, esta derivada parcial tiene la misma forma que otras formas de ver el mismo problema:
+$$
+\frac{\partial}{\partial\beta} \left( \sum_{i=1}^n(Y_{i}-X_{i}\beta)^2\right) = \frac{\partial}{\partial\beta} \left((Y-X\beta)'(Y-X\beta) \right)= \frac{\partial}{\partial\beta} \left(Y'Y -\beta'X'Y -Y'X\beta+\beta'X'X\beta  \right)= 0
+$$ 
+$$
+\frac{\partial}{\partial\beta} \left(-2Y'X\beta+\beta'X'X\beta  \right)= 0
+$$
+$$
+X'Y =(X'X)\beta
+$$
+$$
+\hat{\beta}_{MV}=(X'X)^{-1}X'Y=\hat{\beta}_{MC}
+$$
+
+Nota: no olvidar que el parámetro de varianza que se obtiene a través de Máxima Verosimilitud es distinta de la que se obtiene por implicación a través de mínimos cuadrados ordinarios. 
+
+## 1.7. Investiga el contenido del Teorema de Gauss-Markov sobre minimos cuadrados.
+
+El teorema de Gauss Markov establece que el estimador de mínimos cuadrados ordinarios es el estimador lineal insesgado de $\beta$ de mínima varianza.  
+
+# 2. Regresión lineal
+
+```{r}
+library(ggplot2)
+data(diamonds)
+head(diamonds)
+```
+
+Primero veamos qué hay en la base:
+
+```{r}
+str(diamonds)
+summary(diamonds)
+
+```
+
+Parece que las variables numéricas son `price` (que es int), `carat`,`depth`,`table`,`x`,`y`, y `z`; y las variables categóricas son `cut`, `color` y `clarity`.
+
+Pasemos `price` a numérica
+
+```{r}
+diamonds$price <- as.numeric(diamonds$price)
+```
+
+
+Ahora construyamos un modelo lineal usando solo las variables numéricas.
+
+```{r}
+modelonum <- lm(diamonds$price ~ diamonds$carat + diamonds$depth + diamonds$table + diamonds$x + diamonds$y + diamonds$z)
+summary(modelonum)
+```
+
+Ahora hagamos una visualización con `ggplot` que se vea _bien_.
+
+```{r}
+library(ggplot2)
+#fortify(modelonum)
+par(mfrow = c(2,2))
+ggplot(modelonum, aes(.fitted, .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  geom_smooth(se = FALSE) +
+  labs(x ="Ajustados", y = "Residuos") +
+  ggtitle(expression(atop("Los residuos no parecen estar aleatoriamente sobre los datos ajustados", atop(italic("Residuos del modelo lineal vs datos ajustados del modelo"), "")))) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(modelonum) +
+  stat_qq(aes(sample = .stdresid)) +
+  geom_abline() +
+  labs(x ="Cuantiles teóricos", y = "Residuos estandarizados") +
+  ggtitle(expression(atop("El modelo no parece funcionar bien en valores pequeños o altos", atop(italic("Normal Q-Q"), "")))) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(modelonum, aes(.fitted, sqrt(abs(.stdresid)))) +
+  geom_point() +
+  geom_smooth(se = FALSE) + 
+  labs(x ="Valores ajustados", y = "Raiz de residuos estandarizados") +
+  ggtitle(expression(atop("Los residuos no están distribuidos uniformemente", atop(italic("Escala-Localización"), "")))) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(modelonum, aes(.hat, .stdresid)) +
+  geom_point(aes(size = .cooksd)) +
+  geom_smooth(se = FALSE, size = 0.5) + 
+  labs(x ="Leverage", y = "Residuos estandarizados") +
+  ggtitle(expression(atop("Algunos outliers están provocando problemas", atop(italic("Residuos vs leverage"), "")))) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+Se ven algo extrañas las gráficas. Si bien la $R^2$ está indicando una bondad de ajuste adecuada, el modelo lineal parece estar teniendo problemas para ajustarse a los datos.
+
+Veamos la distribución de la variable dependiente:
+
+```{r}
+hist(diamonds$price)
+```
+Está muy cargada hacia valores bajos. 
+
+```{r}
+hist(log(diamonds$price),)
+```
+Mejor. 
+
+Hagamos algunos cambios:
++ La variable dependiente parece no estar bien balanceada, usemos mejor el logaritmo de esa variable
++ También a las variables independientes se les aplica una transformación logarítmica
++ Se ven dos grupos, vamos a agregar una variable que las separe
++ La variable `carat` parece más una variable categórica que una numérica, con unos saltos. Modelemos esos saltos.
+
+```{r}
+diamonds2= diamonds
+y <- log(diamonds2$price)
+bimodal <- ifelse(y > 7.4, c("1"), c("2"))
+e <-c(0, .5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5)
+bimodal2 <- cut(diamonds2$carat, e)
+modelonum2 <- lm( y ~ bimodal + bimodal2 + log(diamonds2$carat,) + log(diamonds2$depth,) + log(diamonds2$table,) + log1p(diamonds2$x) + log1p(diamonds2$y) + log1p(diamonds2$z) + diamonds2$cut + diamonds2$color + diamonds2$clarity)
+summary(modelonum2)
+
+```
+
+```{r}
+#fortify(modelonum2)
+par(mfrow = c(2,2))
+ggplot(modelonum2, aes(.fitted, .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  geom_smooth(se = FALSE) +
+  labs(x ="Ajustados", y = "Residuos") +
+  ggtitle(expression(atop("El modelo hace un mejor ajuste al tener como variable dependiente un log", atop(italic("Residuos del modelo lineal vs datos ajustados del modelo"), "")))) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(modelonum2) +
+  stat_qq(aes(sample = .stdresid)) +
+  geom_abline() +
+  labs(x ="Cuantiles teóricos", y = "Residuos estandarizados") +
+  ggtitle(expression(atop("Aún así, las colas en la distribución no se ajustan al modelo", atop(italic("Normal Q-Q"), "")))) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(modelonum2, aes(.fitted, sqrt(abs(.stdresid)))) +
+  geom_point() +
+  geom_smooth(se = FALSE) + 
+  labs(x ="Valores ajustados", y = "Raiz de residuos estandarizados") +
+  ggtitle(expression(atop("Los residuos tienen una mejor forma", atop(italic("Escala-Localización"), "")))) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(modelonum2, aes(.hat, .stdresid)) +
+  geom_point(aes(size = .cooksd)) +
+  geom_smooth(se = FALSE, size = 0.5) + 
+  labs(x ="Leverage", y = "Residuos estandarizados") +
+  ggtitle(expression(atop("Y es menos fuerte el impacto de outliers", atop(italic("Residuos vs leverage"), "")))) +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+
+## 2.1 ¿Qué tan bueno fue el ajuste?
+
+La muestra es bastante grande (~53 mil observaciones), y el modelo lineal inicial tiene una $R^2$ (de .8592). No obstante, las visualizaciones relacionadas con el modelo lineal mostraron que tenía problemas que se resolvieron al usar logaritmos para reescalar las variables en el modelo. El segundo modelo tiene una $R^2$ de .9841.
+
+## 2.2 ¿Qué medida puede ayudarnos a saber la calidad del ajuste? ¿Cuál fue el valor de $\sigma ^2$ que ajustó su modelo y qué relación tiene con la calidad del ajuste?
+
+La $R^2$ en general representa una aproximación sencilla para entender la calidad del ajuste del modelo. También llamada coeficiente de determinación, es:
+
+$$
+R^2 = \frac{Suma\  de\  los\  cuadrados\ de \ la \ regresión}{Suma\  de\  los\  cuadrados\ de \ la \ regresión \  + Suma\  de\  los\  cuadrados\ del \ error}
+$$
+Es decir, qué tan bien el modelo está explicando la variabilidad total de la información.
+
+Su relación con la $\sigma^2$ es que la suma de los cuadrados del error son el estimador de la varianza del error real. 
+
+El valor de sigma del modelo es 
+
+```{r}
+sigma(modelonum2)^2
+```
+
+
+## 2.3 ¿Cuál es el ángulo entre $Y$ y $\hat{Y}$?
+
+```{r}
+a = modelonum$model$`diamonds$price`
+b = predict(modelonum, type = "response") 
+theta1 <- acos( sum(a*b) / ( sqrt(sum(a * a)) * sqrt(sum(b * b)) ) )
+paste("Ángulo modelo 1: ", theta1)
+```
+```{r}
+a = exp(modelonum2$model$y)
+b = exp(predict(modelonum2, type = "response") )
+theta2 <- acos( sum(a*b) / ( sqrt(sum(a * a)) * sqrt(sum(b * b)) ) )
+paste("Ángulo modelo 2: ", theta2)
+```
+
+## 2.4 Defininan una funcion que calcule la logverosimilitud de unos parámetros $\beta$ y $\sigma ^2$. 
+
+Programemos aparte una columna de unos
+```{r}
+ones <- array(1,c(length(diamonds$price)))
+```
+
+Y hagamos una función de log verosimilitud basada en la normal.
+
+```{r}
+normal.lik1<-function(beta){
+mu<-    diamonds$price -
+        ones          * beta[1]+ 
+        diamonds$carat* beta[2]+
+        diamonds$depth* beta[3]+
+        diamonds$table* beta[4]+ 
+        diamonds$x    * beta[5]+
+        diamonds$y    * beta[6]+
+        diamonds$z    * beta[7]
+        
+sigma2<-beta[8]
+n<-nrow(diamonds$price)
+logl<- -.5*n*log(2*pi) -.5*n*log(sigma2) - (1/(2*sigma2))*sum(mu)**2
+return(-logl) #minimiza
+}
+```
+
+## 2.5 Utilicen la función `optim` de R para numéricamente el máximo de la función de verosimilitud. Si lo hacen correctamente, su solución debe coincidir con la del método `lm`.
+
+```{r}
+#optim(beta <- c(0,0,0,0,0,0,0,1), normal.lik1(beta))
+
+```
+
+No he logrado hacer que los estimadores sean iguales que los de Mínimos Cuadrados :/...
