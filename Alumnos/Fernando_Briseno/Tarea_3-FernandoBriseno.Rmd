@@ -5,9 +5,6 @@ output:
     dev: png
   html_notebook: default
 ---
-```{r}
-pdf.options(useDingbats = TRUE)
-```
 
 # 1. Sección teórica
 
@@ -180,8 +177,6 @@ Ahora hagamos una visualización con `ggplot` que se vea _bien_.
 
 ```{r}
 library(ggplot2)
-#fortify(modelonum)
-par(mfrow = c(2,2))
 ggplot(modelonum, aes(.fitted, .resid)) +
   geom_point() +
   geom_hline(yintercept = 0) +
@@ -223,7 +218,7 @@ hist(diamonds$price)
 Está muy cargada hacia valores bajos. 
 
 ```{r}
-hist(log(diamonds$price),)
+hist(log(diamonds$price))
 ```
 Mejor. 
 
@@ -245,7 +240,6 @@ summary(modelonum2)
 ```
 
 ```{r}
-#fortify(modelonum2)
 par(mfrow = c(2,2))
 ggplot(modelonum2, aes(.fitted, .resid)) +
   geom_point() +
