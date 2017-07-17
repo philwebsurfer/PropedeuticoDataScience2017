@@ -9,7 +9,9 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 
 ```{r}
 install.packages("ggplot2")
+install.packages("GGally")
 library(ggplot2)
+library(GGally)
 data(diamonds)
 head(diamonds)
 
@@ -43,7 +45,25 @@ qplot(price, table, data = diamonds, facets = .~ cut)
 ```
 La varianza que ajusto al modelo fue:
 ```{r}
+print('Promedio de los residuales')
+mean(BLP$residuals)
+print('Varianza de los residuales')
 var(BLP$residuals)
+```
+```{r}
+
+require(GGally)
+require(ggplot2)
+
+my_fn <- function(data, mapping, ...){
+  p <- ggplot(data = data, mapping = mapping) + 
+    geom_point()  +
+    geom_smooth(method=lm, fill="blue", color="blue", ...)
+  p
+}
+
+g = ggpairs(diamonds,columns = 1:7 , lower = list(continuous = my_fn))
+g
 ```
 
 
