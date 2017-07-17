@@ -1,0 +1,301 @@
+---
+output: pdf_document
+---
+# Tarea 3 - Alejandro Hernández Farías
+
+## Parte teórica
+
+Supongamos que queremos explicar una variable estadística $Y$, utilizando la información de $p$ variables $X^1,\ldots,X^p$. Si se toma una muestra de $N$ individuos, cada variable está representada por un vector de tamaño $N$. La información de las variables explicativas se pueden juntar en una matriz $X=[X^1 | \ldots | X^p]$ de tamaño $n \times p$ donde cada columna es una variable y cada fila uno de los individuos de la muestra. 
+
+__-Plantear el problema de regresión como un problema de mínimos cuadrados. Encontrar el vector $\hat{\beta}=[\hat{\beta_1},\ldots,\hat{\beta_p}]^T$ que resuelva:__
+
+$$\hat{\beta}=argmin_{\beta \in \Re^{p}} ||Y-X\beta||^2$$
+          
+Queremos minimizar $f(\beta)=||Y-X\beta||^2$, entonces:
+$$||Y-X\beta||^2=(Y-X\beta)^T (Y-X\beta)=Y^TY-Y^TX\beta-(X\beta)^TY+(X\beta)^T(X\beta)$$
+$$=Y^TY-2\beta^TX^TY+\beta^TX^TX\beta $$
+Derivamos con respecto a $\beta$:
+$$\frac{\partial}{\partial \beta} f(\beta)=-2X^TY+2X^TX\beta$$
+
+Igualamos a cero y despejamos:
+$$-2X^TY+2X^TX\beta=0$$
+$$X^TY=X^TX\beta$$
+
+Por lo tanto:
+$$\hat{\beta}=(X^TX)^{-1}X^TY$$
+
+$$~$$
+__-¿Por qué este planteamiento nos da un ajuste lineal a nuestros datos?__
+
+Por definición del modelo de regresión la variable dependiente es una combinación lineal de las variables independientes o explicativas y un término de error (i.e. $Y=X\beta +\epsilon$), donde los parámetros a estimar $\beta$ son lineales, por lo que nuestra estimación va a ser un ajuste lineal de los datos.
+
+Otro enfoque sería verlo como una composición de funciones lineales por lo que el ajuste a los datos es lineal. 
+
+También lo podemos pensar como que $\beta_i$ es una combinación lineal de las covarianzas entre $X_i$ y $Y_i$ ponderada por los elementos de $\Sigma^{-1}$ (i.e. $(X^TX)^{-1}X^TY=\Sigma^{-1}Cov(X,Y))$.
+          
+$$~$$
+__-¿Podríamos usarlo para ajustar polinomios (ej. $y=x^2$)?__
+
+Sí, siempre y cuando los parámetros sean lineales, la variable dependiente no necesariamente tiene que ser lineal.
+
+$$~$$
+__-Argumentar la relación entre la solución encontrada y un problema de proyección en subespacios vectoriales de álgebra lineal.¿Cuál es la relación particular con el teorema de Pitágoras?__
+
+Se relacionan pues el problema de regresión es a final de cuentas un problema de mínimos cuadrados, en el cual buscamos minimizar $||Y-X\beta||^2$, donde $\hat{Y}$ es una proyección del vector $Y$ de tal manera que $\hat{Y}=X(X^TX)^{-1}X^TY$ y $\hat{\beta}=(X^TX)^{-1}X^TY$. Es importante destacar que para que $||Y-X\beta||^2$ sea mínimo, $||Y-X\beta||$ tiene que ser perpendicular al espacio vectorial generado por las columnas de $X$.
+
+Este último punto lo relaciona con el Teorema de Pitágoras, pues la proyección es la mínima distancia entre $Y$ y $\hat{Y}$, lo que geométricamente se puede ver como la altura del triángulo rectangulo para que la distancia entre $Y$ y $\hat{Y}$ sea la mínima.
+
+
+$$~$$
+__-¿Qué logramos al agregar una columna de unos en la matriz $X$?. Es decir, definir mejor $X=[1_n | X^1 | \dots | X^p]$ con $1_n=[1,1,\dots,1]^T$.__
+
+Esa columna sirve para que en la representación matricial de la regresión, consideremos el parámetro $\beta_0$. El contar con el parámetro $\beta_0$ nos permite que nuestra regresión lineal esté desplazada del centro de gravedad (u origen). 
+
+$$~$$
+__Plantear el problema de regresión ahora como un problema de estadística__
+$$Y_i=\beta_0 + \beta_1 X_{i}^{1}+\ldots + \beta_p X_{i}^{p}+\epsilon_i$$
+donde los errores son no correlacionados con distribución
+$$\epsilon_i \sim N(0,\sigma^2)$$
+
+$$~$$
+__-¿Cuál es la función de verosimilitud del problema anterior?__
+
+Si $\epsilon \sim N(0,\sigma^2 I_n)$, entonces $\epsilon+ X\beta \sim N(X\beta,\sigma^2 I_n)$ y por lo tanto $Y\sim N(X\beta,\sigma^2 I_n)$, pues al sumar un valor a todos los datos se modifica la media en esa proporción, pero la varianza no cambia.
+
+La función de verosimilitud es la siguiente:
+$$L(\beta,\sigma^2)=f(Y|\beta,\sigma^2,X)=(2\pi \sigma^2)^{-\frac{n}{2}}e^{-\frac{1}{2\sigma^2} (Y-X\beta)^T(Y-X\beta)}$$
+
+$$~$$
+__-Mostrar que la solución de máxima verosimilitud es la misma que la del problema de mínimos cuadrados.__
+
+Consideremos $L(\beta,\sigma^2)=(2\pi \sigma^2)^{-\frac{n}{2}}e^{-\frac{1}{2\sigma^2} (Y-X\beta)^T(Y-X\beta)}$, entonces:
+$$log L(\beta,\sigma^2)=-\frac{n}{2}log(2\pi\sigma^2)-\frac{1}{2\sigma^2}(Y-X\beta)^T(Y-X\beta)$$
+$$=-\frac{n}{2}log(2\pi\sigma^2)-\frac{1}{2\sigma^2}[Y^TY-Y^TX\beta-(X\beta)^TY+(X\beta)^T(X\beta)]$$
+$$=-\frac{n}{2}log(2\pi\sigma^2)-\frac{1}{2\sigma^2}Y^TY+\frac{1}{2\sigma^2}2\beta^TX^TY-\frac{1}{2\sigma^2}\beta^TX^TX\beta$$
+
+Derivamos con respecto a $\beta$ e igualamos a cero:
+$$\frac{\partial}{\partial \beta} log L(\beta,\sigma^2)=\frac{1}{\sigma^2}X^TY-\frac{1}{2\sigma^2}(2X^TX\beta)=\frac{1}{\sigma^2}(X^TY-X^TX\beta)=0$$
+
+Entonces:
+$$\hat{\beta}=(X^TX)^{-1}X^TY$$
+
+Por lo tanto, la solución coincide con la del problema de mínimos cuadrados.
+
+$$~$$
+__-Investiga el contenido del Teorema de Gauss-Markov sobre mínimos cuadrados.__
+
+
+El Teorema de Gauss-Markov establece que los estimadores de mínimos cuadrados ordinarios son lineales, insesgados y óptimos, "Best Linear Unbiased Estimator (BLUE)"; es decir, tienen varianza mínima entre la clase de los estimadores lineales e insesgados.
+
+El Teorema está basado en los siguientes supuestos:
+
+- El modelo esta correctamente especificado.
+
+- Debe ser lineal en los parámetros.
+
+- El valor de la media condicional es cero.
+
+- Hay homocedasticidad.
+
+- No existe correlación entre las perturbaciones.
+
+- La covarianza entre $\epsilon$ y $X$ es cero.
+
+- El número de observaciones es mayor que el de parámetros.
+
+- Existe variabilidad entre los $X$.
+
+- No hay multicolinealidad perfecta.
+
+- Las $X$ son no estocásticas; es decir, son fijas en muestras repetidas.
+
+$$~$$
+
+## Parte aplicada
+
+Primero utilizaremos la base `diamonds` y posteriormente probaremos con la base `ciudades`:
+
+### Base diamonds
+__Cargamos la base diamonds y el paquete ggplot2__
+```{r}
+library(ggplot2)
+data(diamonds)
+head(diamonds)
+
+```
+
+$$~$$
+__-Regresion lineal para explicar la variable `price` usando las demas variables numéricas__:
+```{r}
+modelo1<-lm(price~carat+depth+table+x+y+z, diamonds)
+summary(modelo1)
+```
+
+Como la variable `z` no es significativa, no la vamos a considerar en el modelo. Con lo anterior, el modelo quedaría como sigue:
+```{r}
+modelo1<-lm(price~carat+depth+table+x+y, diamonds)
+summary(modelo1)
+
+```
+
+$$~$$
+__-¿Qué tan bueno fue el ajuste?__
+
+En teoría los residuos tienen una distribución normal. Para verificar usamos la siguiente gráfica de qqplot:
+```{r}
+qplot(sample = modelo1$residuals)
+```
+
+Esperaríamos una línea de 45 grados, en este caso no es así por lo que los residuos no cumplen con el supuesto de normalidad. 
+
+Para revisar si los errores son homocedásticos, los graficamos contra cada una de las variables independientes.
+Lo que estaríamos esperando es que no existan outliers, que no tenga un patrón ni tendencia. 
+
+```{r}
+qplot(diamonds$carat,modelo1$residuals)
+qplot(diamonds$depth,modelo1$residuals)
+qplot(diamonds$table,modelo1$residuals)
+qplot(diamonds$x,modelo1$residuals)
+qplot(diamonds$y,modelo1$residuals)
+```
+
+En las gráficas se puede observar tendencia de los residuos (diferencias de los residuos de acuerdo al valor de las variables independientes). 
+
+Por lo anterior, se puede concluir que en todos los casos se observa heterocedasticidad.
+
+Teóricamente los valores fitted y los residuos no están correlacionados. Para comprobar los graficamos:
+
+```{r}
+qplot(modelo1$fitted.values,modelo1$residuals)
+```
+
+Sin embargo, la gráfica nos muestra que hay una correlación negativa entre los residuos y los valores fitted.
+
+Con todos estos elementos podemos concluir que el ajuste no es el adecuado pues no se cumplen varios de los supestos que se requieren para utilizar el modelo de regresión lineal.
+
+$$~$$
+__-¿Qué medida puede ayudarnos a saber la calidad del ajuste?__
+
+La medida $R^2$ nos ayuda a conocer la calidad del ajuste lineal determinado por los estimadores por mínimos cuadrados ordinarios.
+Esta medida en el caso de una regresión lineal múltiple se obtiene como la suma de cuadrados explicados entre la suma de cuadrados totales. 
+$$R^2=\frac{\sum_{i=1}^n(\hat{Y_i}-\bar{Y})^2}{\sum_{i=1}^n(Y_i-\bar{Y})^2} $$
+Nos va a indicar que proporción de la variación de $Y$ es explicada por la regresión. 
+
+En nuestro ejemplo, el valor de la $R^2$ =0.8592, indicando que el modelo es adecuado considerando únicamente la proporción de la variación explicada. No obstante lo anterior, esta medida no debe ser lo único a considerar para evaluar el ajuste, ya que como vimos en el punto anterior, al no cumplirse varios de los supuestos o hipótesis básicas, los resultados no son del todo fiables.
+
+$$~$$
+__-¿Cuál fue el valor de $\sigma^2$ que ajustó su modelo y que relación tiene con la calidad del ajuste?__
+
+La varianza residual del modelo es: 
+
+```{r}
+var(modelo1$residuals)
+```
+
+La relación que tiene con la calidad de ajuste es que el inverso de la varianza nos sirve para ponderar las covarianzas entre las variables independientes y la variable dependiente. Lo anterior, pues nos interesan las $\beta$'s que son precisas (inverso de la varianza) y que están relacionadas con $Y$.
+
+$$~$$
+__-¿Cuál es el ángulo entre $Y$ y $\hat{Y}$?__
+
+La $R^2=cos^2(\theta)=0.8592$; es decir, la $R^2$ es el coseno al cuadrado del ángulo entre la variable dependiente $Y$ y la variable estimada $\hat{Y}$, ambas centradas. 
+
+Por esta razón, el ángulo $\theta=cos^{-1}(R)=cos^{-1}(\sqrt{R^2})$:
+```{r}
+acos(sqrt(0.8592))
+
+```
+
+$$~$$
+__-Definan una función que calcule la logverosimilitud de unos parámetros $\beta$ y $\sigma^2$.__
+
+Definimos la funcion `logver` como sigue:
+```{r}
+logver <- function(par, X, y) {
+  n <- length(y)
+	p <- dim(X)[2]
+	beta <- par[1:p]
+	sigma2 <- par[p+1]
+	mu <- X%*%beta
+	logl<- suppressWarnings(-0.5*n*log(2*pi)-0.5*n*log(sigma2)-(1/(2*sigma2))*sum((y-mu)**2))
+	return(-logl)
+}
+
+```
+
+
+
+$$~$$
+__-Utilicen la función `optim` de `R` para obtener numéricamente el máximo de la función de verosimilitud. La solución debe coincidir con la del método `lm`.__
+
+Usando la función `optim` de `R` :
+
+```{r}
+beta_sigma<-as.matrix(c(1,1,1,1,1,1,100))
+X<-as.matrix(cbind(rep(1,53940), diamonds[,c(1,5,6,8,9)]))
+y<-diamonds[,7]
+optim(par=beta_sigma, logver, X=X, y=y, method="L-BFGS-B")
+```
+
+La solución es muy cercana a la que se obtuvo utilizando el método `lm`. 
+
+$$~$$
+
+### Base ciudades
+
+Ahora utilizaremos la base `ciudades` obtenida de <http://knoema.es> para definir una regresión lineal usando la función `lm`, ver si ajusta correctamente y finalmente utilizar nuevamente la función `optim` para ver si la solución coincide con la del metodo `lm`.
+
+__Leemos la base que tiene como variables el rating de la ciudad (Overall_Rating), estabilidad (Stability), salud (Healthcare), cultura (Culture) y educación (Education):__
+```{r}
+ciudades = read.table("/Users/alex/Documents/Maestría Ciencia de Datos/Tarea3/ciudades1.csv", row.names=1, header=TRUE, sep=",") 
+head(ciudades)
+```
+
+__Vamos a buscar explicar la variable Overall_Rating en función de las otras variables como sigue:__
+```{r}
+modelo2<-lm(Overall_Rating~Stability+Healthcare+Culture+Education, data=ciudades)
+summary(modelo2)
+```
+
+__Verificamos el ajuste del modelo:__
+
+En primer lugar vemos que la $R^2$ es muy cercana a 1, lo que es un indicativo de que el ajuste es adecuado.
+
+```{r}
+qplot(sample =as.vector(modelo2$residuals))
+```
+
+En la gráfica anterior podemos ver que los residuos cumplen con el supuesto de normalidad.
+
+Asimismo, como se puede constatar en las siguientes gráficas los errores son homocedásticos, pues no se aprecian relaciones ni tendencias:
+
+```{r}
+qplot(as.vector(ciudades$Stability),as.vector(modelo2$residuals))
+qplot(as.vector(ciudades$Healthcare),as.vector(modelo2$residuals))
+qplot(as.vector(ciudades$Culture),as.vector(modelo2$residuals))
+qplot(as.vector(ciudades$Education),as.vector(modelo2$residuals))
+
+```
+
+De manera similar, los valores fitted y los residuos no estan correlacionados:
+```{r}
+qplot(as.vector(modelo2$fitted.values),as.vector(modelo2$residuals))
+```
+
+Por lo anterior, podemos concluir que el modelo ajusta bien.
+
+__Vamos a corroborar que la solución del método `lm` coincide con el máximo de la función de verosimilitud obtendido a partir de la función `optim`:__ 
+
+Método `lm`:
+```{r}
+summary(modelo2)
+```
+
+Función `optim`:
+```{r}
+X<-as.matrix(cbind(rep(1,dim(ciudades)[1]), ciudades[,2:5]))
+y<-ciudades[,1]
+beta_sigma2<-as.matrix(rep(1,6))
+optim(par=beta_sigma2, logver, X=X, y=y, method="BFGS")
+```
+
+Finalmente, podemos concluir que las soluciones son __identicas bajo ambos métodos.__
