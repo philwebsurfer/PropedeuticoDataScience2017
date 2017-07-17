@@ -1,0 +1,66 @@
+---
+title: "Tarea 3 Propedeutico Data Science (Aplicada)"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+install.packages("ggplot2")
+library(ggplot2)
+data(diamonds)
+head(diamonds)
+
+```
+En principio si fue una buena medida de ajuste pues tanto el R-cuadrado como el R-cuadrado ajustado salieron cercanos a 1, es decir el la Var(y-estimada) replica en gran medida la Var(y-observada). En terminos de las pruebas de cada una de las variables podemos observar que para la gran mayoría se puede desechar la hipótesis nula de que el coeficiente es igual a cero 
+```{r}
+BLP= lm(price ~., data=diamonds)
+summary(BLP)
+```
+
+```{r}
+?ggplot2
+```
+```{r}
+plot(
+  BLP$fitted.values ,
+  diamonds$price, main="Fitted vs Observed")
+```
+
+```{r}
+qplot(price, depth, data = diamonds)
+```
+```{r}
+qplot(BLP$fitted.values, diamonds$price, main = "Fitted vs. Observed values", geom =c("point","smooth") )
+```
+```{r}
+qplot(price, data = diamonds, fill = cut)
+```
+```{r}
+qplot(price, table, data = diamonds, facets = .~ cut)
+```
+La varianza que ajusto al modelo fue:
+```{r}
+var(BLP$residuals)
+```
+
+
+```{r}
+norm_vec <- function(x) sqrt(sum(x^2))
+```
+```{r}
+yestnorm = norm_vec(BLP$fitted.values)
+ynorm = norm_vec(diamonds$price)
+ratio = yestnorm/ynorm
+acos(ratio)
+
+```
+```{r}
+#?acos
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
