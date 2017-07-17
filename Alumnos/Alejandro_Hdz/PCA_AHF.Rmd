@@ -50,5 +50,3 @@ Con respecto a los paises, podemos apreciar que existen agrupaciones de los mism
 Asimismo, existe otro grupo de paises más desarrollados cuya agrupación también nos resulta familiar como Alemania, Holanda, Dinamarca, Suecia, Noruega, Austria y España.
 
 Por otro lado, relativo a las variables vemos que casi no hay relación entre educación e índice de salud, pero sí existe relación entre dinamismo económico y ambiente político, entre ambiente político y calidad de vida y entre calidad de vida e índice de salud.
-
-$$y=X^2$
