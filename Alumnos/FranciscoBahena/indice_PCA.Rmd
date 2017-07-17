@@ -1,0 +1,67 @@
+---
+title: "índice PCA Fco. Bahena"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## PCA
+
+Leemos la base de Inegi y transformamos sus columnas numéricas
+a columnas per cápita.
+
+```{r }
+
+INEGI <- read.csv('DatosINEGI.csv') 
+cols <- colnames(INEGI)
+
+variables <- c(cols[4], cols[7], cols[8], cols[9], cols[10])
+
+for (var in variables) {
+  
+  INEGI[,var] <- INEGI[,var]/ INEGI[,"Poblacion"]
+  
+} 
+
+head(INEGI)
+
+```
+
+
+Es importante siempre limpiar bien los datos.
+
+Vamos a guardar en una matriz de datos x las variables
+numéricas que ueremos analizar (todas menos Estado y Población),
+y vamos a guardar estado como row.names
+
+
+
+```{r }
+
+x <- INEGI[,-(1:2)]
+
+row.names(x) <- INEGI$Estado
+
+head(x)
+
+```
+
+Ahora usaremos la paquetería FactoMineR 
+para generar nuestro análisis de PCA
+
+```{r }
+
+#install.packages("FactoMineR")
+library(FactoMineR)
+model <- PCA(x)
+model
+
+```
+
+
+
+
