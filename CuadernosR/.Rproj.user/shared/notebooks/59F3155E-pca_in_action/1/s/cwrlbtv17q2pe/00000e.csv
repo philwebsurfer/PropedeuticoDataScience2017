@@ -1,0 +1,2 @@
+"0","INEGI <- read.csv(url(""https://raw.githubusercontent.com/mauriciogtec/PropedeuticoDataScience2017/master/Datos/DatosINEGI.csv""))"
+"0","head(INEGI)"
