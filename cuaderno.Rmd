@@ -1,0 +1,153 @@
+---
+title: "Tarea 3 Pablo Soria"
+output:
+  html_document: default
+  html_notebook: default
+  pdf_document: default
+---
+
+Vamos a cargar los datos primero 
+
+```{r}
+mydata <- read.csv(file="file.csv")
+library(corrplot)
+```
+---
+Esta base de datos tiene el registro de 395 estudiantes de matemáticas junto con datos relevantes como sexo, edad, datos demográficos familiares etc. 
+
+vamos a seleccionar ciertas variables para realizar el ejercicio de regresión, las variables que dejaremos son:
+
+sex: Sexo  
+age: Edad 
+Pstatus: Padres divorciados  
+Medu: Grado escolar de la madre  
+Fedu: Grado escolar del padre  
+studytime: Tiempo semanal de estudio  
+paid: clases extra escolares pagadas  
+Internet: Acceso a internet en casa ( binario)  
+goout: Salir con amigos en escala del 1 al 5  
+Dalc: consumir alcohol durante días laborales  
+Walc:  consumir alcohol durante los fines de semana
+G1: Calificación en el año 1  
+G2: Calificación en el año 2
+G3: Calificación en el año 3 usaremos esta variable como respuesta
+
+
+Paso 1: vamos a crear una nuevo arreglo con las variables que queremos usar:
+```{r}
+myvars = c("G3","G2","G1","sex","age","Pstatus","Medu","Fedu","studytime","paid","internet","goout","Dalc","Walc")
+mydata2 <- mydata[myvars]
+head(mydata2)
+
+
+```
+
+Esto nos deja con una tabla con 9 variables numérica, 4 categoricas y la variable respuesta G3:
+
+```{r}
+
+#cambiamos las variables categoricas por 0 y 1´s 
+mydata2$sex <- as.integer(mydata2$sex == "M")
+mydata2$Pstatus <- as.integer(mydata2$Pstatus == "A")
+mydata2$paid <- as.integer(mydata2$paid == "yes")
+mydata2$internet <- as.integer(mydata2$internet == "yes")
+head(mydata2)
+```
+vamos a ver que nos da un primer modelo sin manipular los datos
+```{r}
+model1 <- lm(formula = G3 ~ G2 + G1 + sex + age + Pstatus + Medu + Fedu + studytime + paid + goout +Dalc + Walc,mydata2)
+summary(model1)
+```
+Vemos una grafica de correlación de los pares 
+```{r}
+corrdata <- cor(mydata2[1:14])
+corrplot(corrdata, method = "number")
+
+```
+A priori con estos dos resultados encontramos lo siguiente:  
+
+1) Nuestra R2 es bastante alta, con un valor de .82, sin embargo cuando vemos la tabla de los p-value que para cada término comprueba la hipótesis nula de que el coeficiente asociada a esa variable sea cero es decir irrelevante para la regresión, este es un primer criterio para
+eliminar datos que no necesitamos, 
+
+2)También nos encontramos con el resultado ovbio de que la calificación en años anteriores G1 y G2 esta fuertemente relacionada con la calificación del año 3, esto es aun más evidente cuando vemos la gráfica de correlaciones a pares. Esto sugiere que existe multicolinealidad en el modelo de regresión entre G# y G" y G1
+
+3)el estadístico F es bastante grande, lo cual nos dice que en general nuestro modelo tal cual está no tiene un valor predictivo estadísticamente significativo, 
+
+Esto nos lleva a la conclusión de que el performance final de los estudiantes se ve afectado ampliamente por el performance pasado lo cual no debería de ser una gran sorpresa
+
+```{r}
+plot(model1)
+
+```
+
+ Intentemos un nuevo modelo que elimina las variables colineales evidentes, 
+
+
+
+```{r}
+model2 <- lm(formula = G3 ~  sex + age + Pstatus + Medu + Fedu + studytime + paid + goout +Dalc + Walc,mydata2)
+summary(model2)
+plot(model2)
+
+
+```
+
+Vemos con este resultado que una vez eliminando las variables colineales contra G3 el nivel de la R2 disminuye considerablemente( esto no debería de sorprendernos), sin embargo observando los p-values encontramos que explicar las calificaciones en términos de todo menos las calificaciones pasada implica que ahora al menos 6 variables se vuelven relevantes de acuerdo a sus pvalores. El estadístico P es siginificativamente menor en este modelo pero pagamos el precio de residuales mucho más alejados de las predicciones del modelo ( esto se explica por que eliminamos las variables colineales que aportaban prácticamente todo el poder predictivo del modelo original)
+
+
+Crearemos un último modelo sencillo para hacver la estimación por máxima verosimilitu más simple: 
+
+```{r}
+model3 <- lm(formula = G3 ~  G1 + G2,mydata2)
+summary(model3)
+```
+
+
+
+Los angulaos de ambos modelos son:
+```{r}
+#Model1
+ang <- acos(sqrt(0.8273))
+ang*180/pi
+
+#Model2
+ang <- acos(sqrt(0.1112))
+ang*180/pi
+
+#Model3
+ang <- acos(sqrt(0.8222))
+ang*180/pi
+
+
+```
+
+
+
+Veamos ahora como hacer el modelo de verosimilitud con los datos del model1
+
+```{r}
+library(bbmle)
+library(stats4)
+y <- mydata2$G3
+x1 <- mydata2$G1
+x2 <- mydata2$G2
+#Creamos la función de verosimilitud
+
+likel <- function(beta0,beta1,beta2,mu,sigma){
+  R <- y - x1*beta1 - x2*beta2 - beta0 #calcula los residuales
+  R <- dnorm(R, mu,sigma, log = TRUE)
+  -sum(R)
+}
+
+#Usaremos la librería bbmle para poder hacer el método:
+
+fit <- mle2(likel, start = list(beta0 = -1.8, beta1 = .15,beta2 =.98, mu = 0, sigma=.8))
+#Los coeficientes son
+fit
+#Los ocmparamos contra los coeficientes originales:
+model3$coefficients
+#sacamos también el valor de el error estándar de los residuales
+summary(model3)
+```
+
+Y vemos afortunadamente que son similares jajajaja 
