@@ -67,7 +67,57 @@ La columna de 1s mejora la estimación de $Y$ con un parámetro $\beta_0$  ya qu
 
 * Plantear ahora como un problema de estadística 
 
+
+El problema en forma vectorial es:
+
+$$   Y = X \beta + \varepsilon $$
+
+Eso implica 
+
+$$\Rightarrow \epsilon = Y - X\beta $$
+
+con  $E\big[ \epsilon \big] = 0$ y $Var(\epsilon) = \sigma^{2}I_n$
+
+y que son los parámetros de una normal tal que:  $\epsilon \sim N(0,\sigma^2I_n)$
+
+si $Y = \epsilon + X\beta$ entonces $E\big[Y\big] = E\big[\epsilon\big] + E\big[X\beta\big]$
+
+eso implica $E\big[Y\big] = 0 + E\big[X\beta\big] \Rightarrow E\big[Y\big] = X\beta$
+
+En cuanto a $Var(Y) = Var(\epsilon + X\beta) $ $\Rightarrow Var(Y) = Var(\epsilon) + Var(X\beta) + 2Cov(\epsilon,X\beta)$
+
+Donde 
+
+$Cov(\epsilon,X\beta) = E\big[ (\epsilon - E[\epsilon])(X\beta - E[X\beta]) \big]$
+
+eso implica $Cov(\epsilon,X\beta) = E\big[ (\epsilon - E[\epsilon])(X\beta - X\beta) \big] = E\big[ (\epsilon)(0) \big] = 0$
+
+y aparte sabemos que 
+
+$Var(X\beta) = 0$ lo cual nos permite afirmar que $Var(Y) = Var(\epsilon) = \sigma^2I_n$
+
+Entonces, por propiedades de la normal 
+
+$$ Y = \epsilon + X\beta \sim N(X\beta,\sigma^2I_n) $$
+
 * Cuál es la función de verosimilitud del problema anterior ?
+
+$$ L( \beta, \sigma^2;X) = \prod \frac{1} { \sqrt{2 \pi \sigma^{2}}} e^{- \frac{(Y-X\beta)^{T}(Y-X\beta)}{2\sigma^{2}}}$$
+
++ Le aplicamos la función de logaritmo para facilitar la derivación de las CPO.
+
+$$ log( L( \beta, \sigma^2;X)) = - \frac{1}{ \sqrt{2 \pi \sigma^{2}}}- \frac{(Y-X \beta)^{T}(Y-X \beta)}{2 \sigma^{2}} $$
+Lo cual te lleva a la CPO.
+
+$$  X^T(Y-X^{T} \beta) = 0 $$
+$$ X^TY -XX^{T} \beta = 0$$
+
+Reescrito, es la misma CPO que la minimización de los errores al cuadrado !!!!!
+
+$$  \beta = [X^{T}X]^{-1}X^{T}Y $$
+
+
+
 
 
 * Cuál es el teorema de Gauss-Markov ? 
@@ -167,6 +217,11 @@ print('El ángulo teta es : ')
 teta
 
 ```
+
+
+
+
+
 
 
 

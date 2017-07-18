@@ -154,10 +154,40 @@ $(document).ready(function () {
 </ul>
 <p>La columna de 1s mejora la estimación de <span class="math inline">\(Y\)</span> con un parámetro <span class="math inline">\(\beta_0\)</span> ya que deja de forzar que el espacio generado por las columnas de <span class="math inline">\(X\)</span> pase por el origen.</p>
 <ul>
-<li><p>Plantear ahora como un problema de estadística</p></li>
-<li><p>Cuál es la función de verosimilitud del problema anterior ?</p></li>
-<li><p>Cuál es el teorema de Gauss-Markov ?</p></li>
+<li>Plantear ahora como un problema de estadística</li>
 </ul>
+<p>El problema en forma vectorial es:</p>
+<p><span class="math display">\[   Y = X \beta + \varepsilon \]</span></p>
+<p>Eso implica</p>
+<p><span class="math display">\[\Rightarrow \epsilon = Y - X\beta \]</span></p>
+<p>con <span class="math inline">\(E\big[ \epsilon \big] = 0\)</span> y <span class="math inline">\(Var(\epsilon) = \sigma^{2}I_n\)</span></p>
+<p>y que son los parámetros de una normal tal que: <span class="math inline">\(\epsilon \sim N(0,\sigma^2I_n)\)</span></p>
+<p>si <span class="math inline">\(Y = \epsilon + X\beta\)</span> entonces <span class="math inline">\(E\big[Y\big] = E\big[\epsilon\big] + E\big[X\beta\big]\)</span></p>
+<p>eso implica <span class="math inline">\(E\big[Y\big] = 0 + E\big[X\beta\big] \Rightarrow E\big[Y\big] = X\beta\)</span></p>
+<p>En cuanto a $Var(Y) = Var(+ X) $ <span class="math inline">\(\Rightarrow Var(Y) = Var(\epsilon) + Var(X\beta) + 2Cov(\epsilon,X\beta)\)</span></p>
+<p>Donde</p>
+<p><span class="math inline">\(Cov(\epsilon,X\beta) = E\big[ (\epsilon - E[\epsilon])(X\beta - E[X\beta]) \big]\)</span></p>
+<p>eso implica <span class="math inline">\(Cov(\epsilon,X\beta) = E\big[ (\epsilon - E[\epsilon])(X\beta - X\beta) \big] = E\big[ (\epsilon)(0) \big] = 0\)</span></p>
+<p>y aparte sabemos que</p>
+<p><span class="math inline">\(Var(X\beta) = 0\)</span> lo cual nos permite afirmar que <span class="math inline">\(Var(Y) = Var(\epsilon) = \sigma^2I_n\)</span></p>
+<p>Entonces, por propiedades de la normal</p>
+<p><span class="math display">\[ Y = \epsilon + X\beta \sim N(X\beta,\sigma^2I_n) \]</span></p>
+<ul>
+<li>Cuál es la función de verosimilitud del problema anterior ?</li>
+</ul>
+<p><span class="math display">\[ L( \beta, \sigma^2;X) = \prod \frac{1} { \sqrt{2 \pi \sigma^{2}}} e^{- \frac{(Y-X\beta)^{T}(Y-X\beta)}{2\sigma^{2}}}\]</span></p>
+<ul>
+<li>Le aplicamos la función de logaritmo para facilitar la derivación de las CPO.</li>
+</ul>
+<p><span class="math display">\[ log( L( \beta, \sigma^2;X)) = - \frac{1}{ \sqrt{2 \pi \sigma^{2}}}- \frac{(Y-X \beta)^{T}(Y-X \beta)}{2 \sigma^{2}} \]</span> Lo cual te lleva a la CPO.</p>
+<p><span class="math display">\[  X^T(Y-X^{T} \beta) = 0 \]</span> <span class="math display">\[ X^TY -XX^{T} \beta = 0\]</span></p>
+<p>Reescrito, es la misma CPO que la minimización de los errores al cuadrado !!!!!</p>
+<p><span class="math display">\[  \beta = [X^{T}X]^{-1}X^{T}Y \]</span></p>
+<ul>
+<li>Cuál es el teorema de Gauss-Markov ?</li>
+</ul>
+<p>El teorema de Gauss-Markov establece que, en un modelo de regresión lineal, si los errores tienen media de 0 (<span class="math inline">\(E[\epsilon] = 0\)</span>), no están correlacionados entre sí y tienen la misma varianza <span class="math inline">\(\sigma^2\)</span> el mejor estimador lineal insesgado de los coeficientes <span class="math inline">\(\beta\)</span> está dado por la minimización de los errores al cuadrado (OLS) siempre que ésta exista.</p>
+<p>Nota: Esto no implica que la distribución de <span class="math inline">\(\epsilon\)</span> necesariamente sea normal</p>
 </div>
 <div id="parte-tecnica" class="section level1">
 <h1>Parte Técnica</h1>
@@ -241,15 +271,12 @@ summary(fit) </code></pre>
 </div>
 <div id="conclusiones-sobre-el-ajuste" class="section level3">
 <h3>Conclusiones sobre el ajuste</h3>
-<p>En principio si fue una buena medida de ajuste pues tanto el R-cuadrado como el R-cuadrado ajustado salieron cercanos a 1, es decir el la Var(y-estimada) replica en gran medida la Var(y-observada). En terminos de las pruebas de cada una de las variables podemos observar que para la gran mayoría se puede desechar la hipótesis nula de que el coeficiente es igual a cero</p>
-<p>Tanto la R^2 como la ajustada son cercanos a uno, lo cual indica un buen ajuste ya que implica que el modelo capta un gran porcentaje de la varianza de los datos reales. Asimismo, podemos firmar que gran parte de los coeficientes de regresión son significativos, (muy distintos de cero) lo que implica que para efectos del precio, variables como el carat</p>
-<div id="section" class="section level4">
-<h4></h4>
+<p>Tanto la R^2 como la ajustada son cercanos a uno, lo cual indica un buen ajuste ya que implica que el modelo capta un gran porcentaje de la varianza de los datos reales. Asimismo, podemos firmar que gran parte de los coeficientes de regresión son significativos, (muy distintos de cero) lo que implica que para efectos del precio, variables como el carat, cut o depth tienen una relación.</p>
 <ul>
 <li>Cuál es el ángulo entre <span class="math inline">\(Y\)</span> y <span class="math inline">\(\hat{Y}\)</span></li>
 </ul>
 <p>Definimos una funcion que genera la norma.</p>
-<p>Buscamos <span class="math inline">\(\theta\)</span> tal que <span class="math inline">\(cos(\theta) = \frac{||\hat{Y}||}{||(Y)||}\)</span></p>
+<p>Buscamos <span class="math inline">\(\theta\)</span> tal que <span class="math inline">\(cos(\theta) = \frac{||\hat{Y}||}{||Y||}\)</span></p>
 <pre class="r"><code>norm_vec &lt;- function(x) sqrt(sum(x^2))
 
 Y &lt;- diamonds$price
@@ -266,7 +293,6 @@ print('El ángulo teta es : ')</code></pre>
 <pre><code>## [1] &quot;El ángulo teta es : &quot;</code></pre>
 <pre class="r"><code>teta</code></pre>
 <pre><code>## [1] 0.2030791</code></pre>
-</div>
 </div>
 </div>
 
