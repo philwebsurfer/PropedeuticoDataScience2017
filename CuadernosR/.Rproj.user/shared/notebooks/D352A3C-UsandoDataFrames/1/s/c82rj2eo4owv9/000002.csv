@@ -1,0 +1,2 @@
+"0","adults <- read.csv(""adultsdata.csv"", header = FALSE)"
+"0","head(adults) # imprime las primeras lineas"

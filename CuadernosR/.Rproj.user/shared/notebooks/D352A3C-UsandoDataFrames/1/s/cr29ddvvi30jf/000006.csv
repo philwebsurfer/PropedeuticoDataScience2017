@@ -1,0 +1,5 @@
+"0","plot("
+"0","  mod$fitted.values, "
+"0","  adults2$uji_numeric,"
+"0","  main = ""prediccion vs reales"""
+"0",")"

@@ -1,0 +1,3 @@
+"0","for (col in c(""Secundarias"", ""DefuncionesGenerales"", ""Nacimientos"", ""Divorcios"", ""Matrimonios"")) {"
+"0","  INEGI[ ,col] <- INEGI[ ,col]  / INEGI[ ,""Poblacion""] "
+"0","}"
