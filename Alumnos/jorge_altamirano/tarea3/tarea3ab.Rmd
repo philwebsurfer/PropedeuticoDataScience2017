@@ -40,6 +40,6 @@ summary(modelo1)
 ```
 ```{r}
 # Arco coseno
-acos(sqrt(0.8592))
+acos(sqrt(0.8592))*180/pi
 ```
 
