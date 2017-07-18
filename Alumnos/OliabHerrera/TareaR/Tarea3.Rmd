@@ -1,9 +1,8 @@
 ---
 title: "Tarea3"
 output:
-  pdf_document: default
-  html_notebook: default
-  word_document: default
+  pdf_document
+  
 ---
 # Minimos cuadrados
 
@@ -158,7 +157,8 @@ library(plotly)
 data<-as.data.frame(cbind(reg_precio$fitted.values,diamonds_num$price))
 p <- plot_ly(data = data, x = ~data[,1], y = ~data[,2]) %>%
   layout(title="Valores ajustadosvs Valores observados")
-p
+
+##Si dejo la grafica no se compila bien al hacer el knit
 
 ```
 
@@ -175,7 +175,7 @@ nuestro error estandar residual $\sigma=1497$ por lo que $sigma^2=1497^2$
 $$arcos(R^2)=\theta$$
 En este caso en particular $R^2=.8592$ por lo que 
 ```{r}
-acos(square(.8592))
+acos(sqrt(.8592))
 ```
 
 
