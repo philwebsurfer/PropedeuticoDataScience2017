@@ -74,8 +74,9 @@ $$Log(L(\beta, \sigma^2))=-\frac{n}{2}ln(2\pi)-\frac{n}{2}ln(\sigma^2)-\frac{1}{
  Ahora hay que maximizar esa funcion sobre $\beta$ y $\sigma^2$
  Respecto de $\beta$
  $$\frac{dL}{d\beta}=\frac{1}{\sigma^2}(y-X\beta)^tX=0$$
- $$Xy=X^tX\beta$$
- $$\hat{\beta}=(X^tX)^{-1}Xy$$
+ $$X^t
+ y=X^tX\beta$$
+ $$\hat{\beta}=(X^tX)^{-1}X^ty$$
  
  Respecto de $\sigma^2$
  $$\frac{dL}{d\sigma^2}= - \frac{n}{2\sigma^2}+\frac{1}{2\sigma^4}(y-X\beta)^t(y-X\beta)=0$$
@@ -83,7 +84,7 @@ $$Log(L(\beta, \sigma^2))=-\frac{n}{2}ln(2\pi)-\frac{n}{2}ln(\sigma^2)-\frac{1}{
  que puede resolverse usando $\hat{\beta}$ que encontramos en la solucion anterior.
  
  Como pudimos ver el resultado de maxima verosimilitud
-  $$\hat{\beta}=(X^tX)^{-1}Xy$$
+  $$\hat{\beta}=(X^tX)^{-1}X^ty$$
   Es igual al resultado de $\hat{\beta}$ de minimos cuadrados
   
 # El teorema de Gauss Markov
@@ -111,7 +112,7 @@ head(diamonds)
 
 diamonds_num<-diamonds[,c(1,5:10)]
 
-reg_precio=lm(precio~carat+depth+table+x+y+z, data=diamonds_num)
+reg_precio=lm(price~carat+depth+table+x+y+z, data=diamonds_num)
 
 summary(reg_precio)
 
@@ -147,7 +148,7 @@ g
 
 ```
 
-Graficamente así se ven los valores del modelo contra los observados
+Graficamente así se ven los valores del modelo contra los observados. Podemos ver que no forman una linea de 45 grados por lo que posiblemente hay alg´ún problema dada la correlacion entre las variables explicativas. Esto tambien lo podemos ver en la tabla de correlaciones.
 
 ```{r}
 #Grafica de los valores del modelo contra los reales
@@ -164,7 +165,7 @@ p
 
 
 
-Podemos ver que como el modelo tiene una $R^2 ~ .8592$ por lo que podemos decir que el modelo esta bien especificao ya que explica el aproximadamente el 85% de la varianza con las variables que estamos usando.
+Podemos ver que como el modelo tiene una $R^2 ~ .8592$ por lo que podemos decir que el modelo explica 85% de la varianza con las variables que estamos usando pero hay algunos problemas entre ellas por lo que los estimadores deben de estar sesgados.
 nuestro error estandar residual $\sigma=1497$ por lo que $sigma^2=1497^2$
 
 
@@ -174,7 +175,7 @@ nuestro error estandar residual $\sigma=1497$ por lo que $sigma^2=1497^2$
 $$arcos(R^2)=\theta$$
 En este caso en particular $R^2=.8592$ por lo que 
 ```{r}
-acos(sqr(.8592))
+acos(square(.8592))
 ```
 
 
@@ -185,33 +186,60 @@ En caso de que podamos aproximar con una normal tenemos lo siguiente:
 
 lik1<-function(par,X,y){
   beta<-par[1:ncol(X)]
-  sigma2<-par[8]
+  sigma2<-par[ncol(X)+1]
   n<-nrow(y)
   X<-as.matrix(X)
-  beta<-as.vector(beta)
+  beta<-as.matrix(beta)
   
   mu<-X%*%beta
+  
 
-  logl= -.5*n*log(2*pi) -.5*n*log(sigma2) -(1/(2*sigma2))*sum((y-mu)**2)
+  logl= -.5*n*log(2*pi) -.5*n*log(sigma2) - (sum((y-mu)**2)* .5/sigma2)
+  
 return(-logl)
 }
 
 ```
 
 En nuestro caso en particular:
+
 ```{r}
-
-X_reg<-cbind(rep(1,length(y)), diamonds_num[,2:7])
 y_reg<-diamonds_num[,1]
+X_reg<-cbind(rep(1,length(y_reg)), diamonds_num[,2:7])
 
-betasigma<-c(0,0,0,0,0,0,0,80) 
 
-optim(par=betasigma,lik1, X=X_reg, y=y_reg)
+betasigma<-c(1,.79,61.75,57.46,5.731,5.735,35.5, 1) 
+
+optim(par=betasigma,lik1, X=X_reg, y=y_reg,method="BFGS")
+
+```
+```{r}
+reg_precio$coefficients
 
 ```
 
+Ahora, como z es "no significativa" vamos a sacarla del modelo y a correr todo con el nuevo conjunto de variables
+
+```{r}
+diamonds_red<-diamonds_num[,-c(7)]
+
+reg_red<-lm(price~carat+depth +table+x+y, data=diamonds_red)
+
+summary(reg_red)
+```
 
 
+ Ahora con esto vuelvo a definir mis variables a usar en la funcion de max verosimilitud
  
+ 
+```{r}
+y_reg<-diamonds_red[,1]
+X_reg<-cbind(rep(1,length(y_reg)), diamonds_num[,2:6])
+betasigma<-c(1,1,1,1,1,1,100) 
+optim(par=betasigma,lik1, X=X_reg, y=y_reg, method = "BFGS")
+
+```
+
+Podemos ver como los estimadores obtenidos por maxima verosimilitud se parecen mas a los que tienen mayor significancia en el modelo de regresion lineal.
 
 
