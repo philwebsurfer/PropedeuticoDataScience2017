@@ -1,0 +1,45 @@
+---
+title: "Tarea 3: Jorge Altamirano"
+output: html_notebook
+header-includes:
+   - \usepackage{bbm}
+---
+
+
+```{r}
+library(ggplot2)
+rm(diamonds)
+diamonds=diamonds[, c(1,5,6,7,8,9,10)]
+head(diamonds)
+plot(diamonds$price,diamonds$carat)
+```
+
+
+
+```{r}
+modelo1 = lm(formula = price ~ carat + depth + table + x + y + z, data = diamonds)
+summary(modelo1)
+```
+```{r}
+plot(modelo1, which=1)
+```
+
+
+```{r}
+scale(diamonds)
+summary(diamonds)
+```
+
+```{r}
+pairs(diamonds)
+```
+
+```{r}
+modelo1 = lm(formula = price ~ carat + depth + table + x + y + z, data = diamonds)
+summary(modelo1)
+```
+```{r}
+# Arco coseno
+acos(sqrt(0.8592))*180/pi
+```
+
