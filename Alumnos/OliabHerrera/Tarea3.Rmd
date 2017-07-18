@@ -1,0 +1,282 @@
+---
+title: "Tarea3"
+author: "Oliab Herrera Coria"
+output:
+  pdf_document
+  
+---
+# Minimos cuadrados
+
+Plantear el problema de minimos cuadrados como un problema de minimizacion:
+
+Tenemos que $Y=X\beta + \epsilon$, por lo que donde $\epsilon$ es el error, por lo que podemos plantear el problema como la minimizaci´ón de este error $$min_{  } ||\epsilon||^2 $$ que es equivalente a $$min_{\beta} ||Y-X\beta||^2$$
+Para encontrar el estimador $\hat{\beta}$ es necesario derivar e igualar a 0:
+Derivando respecto a $\beta$:
+$$-2X^t (Y-X\hat{\beta})=0$$
+$$2X^tY=2X^tX\hat{\beta}$$
+$$\hat{\beta}=(X^tX)^{-1}X^tY$$
+Es el $\hat{\beta}$ que soluciona el problema de minimización.
+
+Con esto podemos ver que para cada:
+$$\hat{\beta}_{i}=\frac{\sum_{i}x_{i}y_{i}}{\sum_{i}x_{i}^2}$$
+La cuál es una composición lineal de los parametros.
+Desde el planteamiento estamos buscando que el resultado sea lineal en los parametros, no en los datos por lo que este metodo serviria para poder aproximar polinomios de la orma $Y=X^2$
+
+## ¿En qué se relaciona esto con un problema de proyección?
+
+Recordemos que al encontrar la  proyección de un vector $Proy_{X}(y)= \frac{<x,y>}{||x||^2}y$ el error de proyeccion $Y- Proy_{x}(Y)$ será ortogonal a la proyección. En el caso del problema de minimizar el error, nosotros estamos proyectando la variable dependiente Y sobre el espacio formado por nuestros datos X. y buscamos las combinaciones sobre X que hagan este error mas pequeño.
+
+Viendolo como el teorema de Pitagoras el cu´ál nos dice que el cuadrado de la hipotenisa de un triangulo es igual a la suma de los otros dos lados $h^2=x^2+y^2$ si el angulo formado entre $x$ y $y$ es de 90 grados, en este caso $H=Y$ las variables dependientes, $x=Proy_{x}(Y)$ y $y= error$, entonces la manera en la que se puede cumplir el teorema es que el error sea ortogonal a la proyeccion (angulo de 90 grados) sino el error seráa mas grande.
+
+##¿Que logramos al agregar una columna de unos en la matriz X?
+Al definir una columna de unos estamos cambiando un poco el problema. 
+Antes de agregar la columna: $$y_{j}=\beta_{1}x_{1j}+...+\beta_{n}x_{nj}$$
+Al definir la columa de unos estamos dando cierta holgura al modelo ya que al agregar un parametro $\alpha$ no estamos forzando a que la aproximacion pase por el origen. $$y_{j}=\alpha+\beta_{1}x_{1j}+...+\beta_{n}x_{nj}$$
+
+##Plantear el problema de regresion como un problema de estadistica con errores....
+
+# ¿Cual es la funcion de verosimilitud del problema anterior?
+
+Planteando el problema como $$Y= X\beta +\epsilon$$
+con $$\epsilon \sim N(0,\sigma^2I_{n})$$
+
+
+podemos probar que $$Y \sim N(X\beta,\sigma^2I_{n})$$
+
+Demostracion:  $$Y= X\beta +\epsilon$$ $$\epsilon=Y-X\beta$$
+
+1) Media:
+$$E(\epsilon)=E(Y)-E(X\beta)=0$$
+$$E(Y)=E(X\beta)$$
+$$E(Y)=X\beta$$
+2) Varianza:
+$$Var(\epsilon)=Var(Y)+Var(X\beta)-2Cov(Y,X\beta)=\sigma^2I_{n}$$
+donde:
+$$Var(X\beta)=0$$ y
+$$Cov(Y,X\beta)=E((Y-E(Y)(X\beta-E(X\beta)))$$
+$$=E((Y-X\beta)(X\beta-X\beta))=0$$
+entonces:
+$$Var(\epsilon)=Var(Y)=\sigma^2I_{n}$$
+
+Ahora, falta demostrar que Y es Normal:
+Por propiedades de la Normal
+como $\epsilon \sim N(0,\sigma^2I_{n})$
+$$\epsilon + X\beta \sim N(X\beta, \sigma^2I_{n})$$
+(Esto era m´ás rapido pero bueno...)
+
+Entonces con esto podemos escribir la funcion de verosimilitud de Y como:
+$$ L(\beta, \sigma^2)=\prod \frac{1}{\sqrt{2\pi\sigma^2}} exp(-\frac{(y-X\beta)^2}{2\sigma^2})$$
+
+$$=(\frac {1}{\sqrt{2\pi\sigma^2}})^n exp (- \frac{1}{2\sigma}  (y-X\beta)^t(y-X\beta))$$
+
+A la cual le sacamos Logaritmo para despu´és poder  buscar los parametros que maximicen la funcion:
+$$Log(L(\beta, \sigma^2))=-\frac{n}{2}ln(2\pi)-\frac{n}{2}ln(\sigma^2)-\frac{1}{2\sigma^2}(y-X\beta)^t(y-X\beta)$$
+ Ahora hay que maximizar esa funcion sobre $\beta$ y $\sigma^2$
+ Respecto de $\beta$
+ $$\frac{dL}{d\beta}=\frac{1}{\sigma^2}(y-X\beta)^tX=0$$
+ $$X^t
+ y=X^tX\beta$$
+ $$\hat{\beta}=(X^tX)^{-1}X^ty$$
+ 
+ Respecto de $\sigma^2$
+ $$\frac{dL}{d\sigma^2}= - \frac{n}{2\sigma^2}+\frac{1}{2\sigma^4}(y-X\beta)^t(y-X\beta)=0$$
+ $$\sigma^2=\frac{1}{n} (y-X\beta)^t(y-X\beta)$$
+ que puede resolverse usando $\hat{\beta}$ que encontramos en la solucion anterior.
+ 
+ Como pudimos ver el resultado de maxima verosimilitud
+  $$\hat{\beta}=(X^tX)^{-1}X^ty$$
+  Es igual al resultado de $\hat{\beta}$ de minimos cuadrados
+  
+# El teorema de Gauss Markov
+
+El teorema de Gauss Markov plantea que un modelo de regresion lineal en el que se cumple que:
+
+1) $E(\epsilon)=0$ 
+2) Los errores no estan correlacionados entre si
+3) $Var(\epsilon_{i}=\sigma^2$ para todo i, los errores tienen la misma varianza
+
+Entonces el mejor estimador lineal insengado de los oeficientes $\beta$ es el resultante del problema de minimizar los errores al cuadrado. si existe.
+
+
+##Parte Aplicada
+
+
+```{r}
+library(ggplot2)
+library(plotly)
+
+data("diamonds")
+head(diamonds)
+
+#Entonces, para hacer la regresion lineal tengo que agarrar los #valores numericos que son
+
+diamonds_num<-diamonds[,c(1,5:10)]
+
+reg_precio=lm(price~carat+depth+table+x+y+z, data=diamonds_num)
+
+summary(reg_precio)
+
+
+```
+Que tan bien ajusta el modelo depende de la correlacion que tenga cada una de las variables explicativas sobre el precio, esto lo podemos ver a trav´és de:
+
+```{r}
+diamonds_num<- diamonds_num[,c(4,1,2,3,5,6,7)]
+
+
+
+cor(diamonds_num)
+```
+
+Como podemos ver en la tabla de correlaciones, precio está correlacionada altamente con "carat", "x","y" y tienen cierta correlacion con death y table. La correlacion es alta xon "z " aunque el modelo arrojo que no es significativa (la podemos quitar del modelo).
+Otra cosa que debemos de notar es la alta correlacion entre las variables explicativas, por ejemplo: carat y x tienen una correlacion de .97
+Podemos ver esto graficamente
+
+```{r}
+library(GGally)
+library(ggplot2)
+
+
+my_fn <- function(data, mapping, ...){
+  p <- ggplot(data = data, mapping = mapping) + 
+    geom_point() + 
+    geom_smooth(method=loess, fill="red", color="red", ...) +
+    geom_smooth(method=lm, fill="blue", color="blue", ...)
+  p
+}
+
+g = ggpairs(diamonds_num,columns = 1:7, lower = list(continuous = my_fn))
+
+suppressWarnings(g)
+
+```
+
+Graficamente así se ven los valores del modelo contra los observados. Podemos ver que no forman una linea de 45 grados por lo que posiblemente hay alg´ún problema dada la correlacion entre las variables explicativas. 
+
+```{r}
+#Grafica de los valores del modelo contra los reales
+
+library(plotly)
+
+data<-as.data.frame(cbind(reg_precio$fitted.values,diamonds_num$price))
+p <- plot_ly(data = data, x = ~data[,1], y = ~data[,2]) %>%
+  layout(title="Valores ajustadosvs Valores observados")
+
+##Si dejo la grafica no se compila bien al hacer el knit
+
+```
+
+Y si graficamos el error podemos ver que no es normal y que casi seguramente est´án correlacionados
+```{r}
+plot(reg_precio$fitted.values, reg_precio$residuals)
+```
+
+
+
+Podemos ver que como el modelo tiene una $R^2 ~ .8592$ por lo que podemos decir que el modelo explica 85% de la varianza con las variables que estamos usando pero hay algunos problemas como la correlacion entre las variables explicativas que resulta en un error no Normal por lo que los estimadores deben de estar sesgados.
+
+Nuestro error estandar residual $\sigma=1497$ por lo que $sigma^2=1497^2=2241009$.
+Recordemos que $\hat{\beta}=(X^tX)^{-1}X^ty$ donde $(X^tX)^{-1}$ es la matriz de varianzas y covarianzas por lo que va a dar una ponderaci´ón mayor a aquellas variables explicativas que tengan una menor varianza. Entre menor varianza mas importantes son las $\hat{\beta}$
+
+
+# ¿Cual es el angulo entre Y y $\hat{Y}$
+
+En este caso en particular $R^2=.8592$ por lo que 
+```{r}
+acos(sqrt(.8592))
+```
+
+
+# Haciendo una funcion de logverosimilitud
+En caso de que podamos aproximar con una normal tenemos lo siguiente:
+
+```{r}
+
+lik1<-function(par,X,y){
+  beta<-par[1:ncol(X)]
+  sigma2<-par[ncol(X)+1]
+  n<-nrow(y)
+  X<-as.matrix(X)
+  beta<-as.matrix(beta)
+  
+  mu<-X%*%beta
+  
+
+  logl= -.5*n*log(2*pi) -.5*n*log(sigma2) - (sum((y-mu)**2)* .5/sigma2)
+  
+return(-logl)
+}
+
+```
+
+En nuestro caso en particular:
+
+```{r}
+y_reg<-diamonds_num[,1]
+X_reg<-cbind(rep(1,length(y_reg)), diamonds_num[,2:7])
+
+
+betasigma<-c(1,.79,61.75,57.46,5.731,5.735,35.5, 1) 
+
+opt<-optim(par=betasigma,lik1, X=X_reg, y=y_reg,method="BFGS")
+opt
+```
+Ahora podemos ver cual es la diferencia entre las betas obtenidas por este metodo  y las que obtuvimos mediante minimos cuadrados.
+
+
+```{r}
+reg_precio$coefficients
+
+```
+
+```{r}
+reg_precio$coefficients-opt$par
+
+```
+
+
+
+Caso quitando Z del modelo
+Ahora, como z no aporta mucho en el modelo vamos a sacarla del modelo y a correr todo con el nuevo conjunto de variables
+
+```{r}
+diamonds_red<-diamonds_num[,-c(7)]
+
+reg_red<-lm(price~carat+depth +table+x+y, data=diamonds_red)
+
+summary(reg_red)
+```
+
+
+ Ahora con esto vuelvo a definir mis variables a usar en la funcion de max verosimilitud
+ 
+ 
+```{r}
+y_reg<-diamonds_red[,1]
+X_reg<-cbind(rep(1,length(y_reg)), diamonds_num[,2:6])
+betasigma<-c(1,1,1,1,1,1,100) 
+opt_red<-optim(par=betasigma,lik1, X=X_reg, y=y_reg, method = "BFGS")
+opt_red
+
+```
+
+Ahora vemos los estimadores que vienen del modelo de regresion sin la Z
+```{r}
+reg_red$coefficients
+
+```
+
+y la diferencia es
+
+```{r}
+reg_red$coefficients-opt_red$par
+
+```
+
+
+
+
+Podemos ver como, en general,  los estimadores obtenidos por maxima verosimilitud se parecen mas solo en table y x, esto posiblemente tenga que cer con la correlacion entre las variables explicativas
+
+
+
