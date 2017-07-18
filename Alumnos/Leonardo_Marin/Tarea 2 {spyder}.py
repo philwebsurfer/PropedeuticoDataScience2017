@@ -32,7 +32,7 @@ plt.figure(figsize=(9, 6))
 plt.imshow(imagen_mat, cmap='gray')
 
 
-## Desompoición singular
+## Desomposición singular
 
 U, sigma, V = np.linalg.svd(imagen_mat)
 
