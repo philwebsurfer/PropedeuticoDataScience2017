@@ -1,0 +1,6 @@
+"0","mydata <- data.frame("
+"0","  peso = c(76, 66, 70), #kilogramos"
+"0","  altura = c(173, 170, 155), #centrimetros"
+"0","  sexo = c(""H"", ""M"", ""M"")"
+"0",")"
+"0","mydata"

@@ -1,0 +1,146 @@
+---
+title: 'Tarea 3: RegresiÃ³n Lineal'
+author: "Miguel CastaÃ±eda Santiago"
+date: "17 de julio de 2017"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+<br>
+
+Supongamos que quieren explicar una
+variable estadística $Y$ (por ejemplo altura) utilizando la información de $p$ $X^1, X^2, ... X^p$ variables (peso, ancho
+de huesos, etc.). Si se toma una muestra de $N$ individuos, cada variable está representada por un vector de
+tamaño $N$. 
+La información de las variables explicativas se pueden juntar en una matriz
+
+$$X = [X^1 | ... | X^p]$$
+
+de tamaño $n x p$ donde cada columna es una variable y cada fila uno de los individuos de la muestra. Contestar 
+
+* Plantear el problema de regresión como un problema de mínimos cuadrados, encontrar el 
+vector $$\hat{\beta} = [\hat{\beta_1} , .... \hat{\beta_p}]^p $$ que resuelva 
+
+
+$$\hat{\beta}=argmin_{\beta \epsilon R^p} \Vert{Y-X\beta}\Vert^2$$
+
+Obteniendo el gradiente de la funciòn a minimizar tenemos que
+
+$$\nabla \Vert{Y-X\beta}\Vert^2 = Y^TY + \beta^TX^TX\beta-2\beta^TX^TY$$
+
+Derivando con respecto a $\beta$ e igualando a 0 tenemos que la solución es:
+
+$$ \hat{\beta} = (X^TX)^{-1}X^TY $$ 
+Si existe $(X^TX)^{-1}$
+
+
+Dado que el problema se puede plantear como una combinación de los términos 
+
+$$ Y = \beta_1X_1^1  + \beta_2X_2^2  ... + \beta_pX_i^P$$
+
+El ajuste que resulta es del tipo lineal.
+
+Como el el modelo el lineal en lo parámetros se puede definir un cambio de variable haciendo y se puede utilizar para ajustar a polinomios por ejemplo $y=x^2$
+
+Su relación con el teorema de pitágoras es tiene una interpretación geométrica, siendo
+
+
+<center>
+![Proyección vector](Pitagoras.png)
+</center>
+
+
+De la imagen se puede apreciar el triangulo formado por $\gamma$,  $X\hat\beta$ y $Y$
+donde la distancia de $Y -\gamma$ no puede ser menor a la distancia $ Y - X\hat\beta$
+
+Planteando el problema de regresión ahora como un problema de estadística se tiene que:
+
+$$Y_{i}=\beta_0 + \beta_1 X_{i}^1 +  ... +  X_{i}\beta_{i} + \varepsilon_{i}$$
+
+Escribiendo el el problema como 
+
+$$Y=X\beta + \varepsilon$$
+Escribiendo la verosimilitud como 
+
+$$L(\beta,\sigma^2) = f(Y | \beta,\sigma^{2},X)$$
+
+La solución de máxima verosimilitud se determina como 
+
+
+$$ L(\beta,\sigma ^2;Y,X)= \prod_{i=1}^{p}f_y(y_i|X;\beta,\sigma^2) $$
+$$ L(\beta,\sigma ^2;Y,X)=(2\pi \sigma^2)^{-N/2}e^{(-\frac{1}{2\sigma^2}(Y-X\beta)^2)} $$
+
+Aplicando el logaritmo se tiene que
+
+$$l(\beta,\sigma^2;Y,X)=-\frac{N}{2}ln(2\pi)-\frac{N}{2}ln(\sigma^2)-\frac{1}{2\sigma^2}\sum_{i=1}^{N}(y_i-x_i\beta)^2$$
+Derivando con respecto a $\beta$
+
+$$\nabla_\beta = \frac{1}{\sigma^2}\sum^N_{i=1}x_i^T(y_i-x_i\beta)$$
+Igualando a cero 
+
+$$\sum^N_{i=1}x_i^Ty_i -\sum^N_{i=1}x_i^Tx_i\beta=0$$
+Despejando $$\beta$$
+
+$$ \beta=\frac{\sum_{i=1}^Nx_i^Ty_i}{(\sum_{i=1}^Nx_i^Tx_i)} $$
+Que se puede escribir tambien como 
+
+$$\beta=\frac{\sum_{i=1}^Nx_i^Ty_i}{(\sum_{i=1}^Nx_i^Tx_i)} =(X^TX)^{-1}X^Ty $$
+
+Por lo que la solución máxima es la misma que la del problema de mínimos cuadrados
+
+
+### Teorema de Gauss Markov
+
+
+En estadística, el Teorema de Gauss-Márkov, formulado por Carl Friedrich Gauss y Andréi Márkov, establece que en un modelo lineal general (MLG) en el que se establezcan los siguientes supuestos:
+
+*Correcta especificación: el MLG ha de ser una combinación lineal de los parámetros ($  \beta$ ) y no necesariamente de las variables:  $Y=X\beta +u$ 
+*Muestreo aleatorio simple: la muestra de observaciones del vector $ (y_{i},\,x_{2i},\,x_{3i},\,\dots ,\,x_{ki})$ es una muestra aleatoria simple y, por lo tanto, el vector  $(y_{i},\,X'_{i})}$ es independiente del vector$ (y_{i},\,X'_{j})}$
+*Esperanza condicionada de las perturbaciones nula: $ E(u_{i}|X'_{i})=0}$
+*Correcta identificación: la matriz de regresoras (X) ha de tener rango completo: rg(X)=K<=N
+*Homocedasticidad: $Var(U|X)=\sigma ^{2}I} $
+
+el estimador mínimo cuadrático ordinario (MCO) de B es el estimador lineal e insesgado óptimo (ELIO o BLUE: best linear unbiased estimator), es decir, el estimador MCO es el estimador eficiente dentro de la clase de estimadores lineales e insesgados.
+
+ 
+### Parte Aplicada
+
+```{r}
+library(ggplot2)
+datosDiamantes <- diamonds
+head(datosDiamantes)
+modelo <- lm (price ~ carat + depth + table + x + y + z, data= datosDiamantes)
+summary(modelo)
+plot(modelo$fitted.values,datosDiamantes$price,main="Prediction vs Real")
+```
+
+
+
+```{r pares}
+pairs(datosDiamantes,main="Diamantes")
+```
+
+```{r}
+summary(modelo)
+```
+
+*¿Qué tan bueno fue el ajuste?, dada la informaciòn arrojada por la función summary vemos que el ajuste tienen un valor R-cuadrado de 0.8592 el cual podemos considerar un bueno ajute.
+
+*¿Qué medida puede ayudarnos a saber la calidad del ajuste?
+el valor de $r^2$ 
+¿Cuál fue el valor de que ajustó sumodelo y que relación tiene con la calidad del ajuste?
+el valor obtenido por el modelo fue 0.8592 
+
+*¿Cuál es el ángulo entre y ?. Hint: usen la y el arcocoseno.
+
+```{r}
+angulo <- acos(sqrt(0.8592))*180/pi
+angulo
+```
+
+
+*Defininan una funcion que calcule la logverosimilitud de unos parámetros y .
+
+

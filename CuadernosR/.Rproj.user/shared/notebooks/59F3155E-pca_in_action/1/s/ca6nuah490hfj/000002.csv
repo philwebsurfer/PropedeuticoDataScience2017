@@ -1,0 +1,3 @@
+"0","X <- INEGI[ ,-(1:2)] # le quita las primeras dos columnas INEGI | 1:2 = c(1,2)"
+"0","row.names(X) <- INEGI$Estado"
+"0","head(X)"

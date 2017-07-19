@@ -1,0 +1,178 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+
+# Tarea 3: Regresión Lineal
+
+## Parte teórica:
+### Esta parte del proyecto será sobre regresión lineal. Supongamos que quieren explicar una variable estadistica Y (por ejemplo altura) utiizando la información de p variables X1, ..., Xp (peso, ancho de huesos, etc). Si se toma una muestra de N individuos, cada variable está representada por un vector de tamaño N. La información de las variables explicativas se pueden juntar en una matriz
+
+$$ X = [X^1\mid...\mid X^p] $$
+### de tamaño n x p donde cada columna es una variable y cada fila uno de los individuos de la muestra. Tienen que contestar lo siguiente:
+
+
+### - Plantear el problema de regresión lineal como un problema de mínimos cuadrados, encontrar el vector beta que resuelva 
+
+$$\hat{\beta} = argmin_{\beta \in R^p}\mid\mid Y - X\beta \mid\mid^2 $$
+
+### y encontrar la solución teórica.
+
+$$SSR= (y-Xb)^t(y-Xb)$$
+### La condición del primer orden para un minimo es que el gradiente de SSR con respecto de beta debe ser cero.
+
+$$\bigtriangledown_\beta SSR=0$$
+### eso es:
+
+$$-X^t(y-Xb)=0$$
+$$(X^tX)b=X^ty$$
+### Si X tiene rango completo entonces
+
+$$\hat{\beta}=(X^tX)^{-1}X^ty$$
+
+
+### ¿Por qué este planteamiento nos da un ajuste lineal a nuestros datos? 
+
+R= Porque los parámetros $\beta $ representan la parte lineal de nuestra variable a aproximar Y en base a otra variable X. Esto es más fácil de visualizar en un ejemplo de dos dimensiones donde la fórmula para estimar Y es $\hat Y = B_0 + B_1*X$ y notamos que es similar a la de una recta, donde el parámetro $B_0$ representa la ordenada al origen y $B_1$ la pendiente.
+
+
+### ¿Podríamos usarlo para ajustar polinomios?
+
+
+R= Sí, podemos ajustar polinomios del modo $y=x^2$ y otros sin ningún problema utilizando el resultado de regresión lineal. Se puede inferir de la demostración previa, que en la regresión polinomial el problema de estimación sigue siendo lineal (Beta seguiría siendo lineal, la matriz X es la que tedría dentro valos de $x^k$).
+
+### - Argumentar la relación entre la solución encontrada y un problema de proyección en subespacios vectoriales de álgebra lineal ¿Cuál es la relación particular con el teorema de Pitágoras?
+
+R= Lo que hace el vector $\beta$ es expandir el plano X, para que sobre este plano encontremos un valoy $\hat Y$ que es la proyección del Y en el plano X, pudiendo formar un triangulo donde el error de estimación o residual es el cateto opuesto.
+
+También la varianza de la variable dependiente se puede descomponer en dos varianzas, la del pronóstico y la del error. Esta descomposición de la varianza de la variable dependiente en dos varianzas es el "Teorema de Pitágoras" del Análisis de Regresión Lineal que, para efectos del modelo anterior, la varianza de las puntuaciones observadas es igual a la varianza de las puntuaciones estimadas más la varianza de los residuos.
+
+### - ¿Que logramos al agregar una columna de unos en la matriz X? es decir, definir mejor 
+$$ X = [1_{n} \mid X^1\mid...\mid X^p] $$
+
+### con 
+$$1_{n} = [1,1,...,1]^T$$
+R= Al agregar la columna de 1´s lo que logramos es tener la estimación de la intercepción de Y. De esta manera, el estimador $\hat{Y}$ no necesariamente inicia desde el origen.
+
+
+### - Plantear el problema de regresión ahora como un problema de estadística
+
+### donde los errores son no correlacionados con distribución
+
+### - ¿Cual es la función de verosimilitud del problema anteriror? Hint: empiecen por excribir el problema como
+
+### Sea 
+$$Y=X\beta+\epsilon$$
+
+### con 
+$$\epsilon \sim N(0,\sigma^2I_n)$$
+con $I_{n}$ la matriz identidad. Y concluyan entonces que 
+$$Y \sim N(X\beta,\sigma^2 I_n)$$
+
+### Escriban entonces la verosimilitud como 
+$$L(\beta,\sigma ^2;Y,X)= \prod_{i=1}^{p}f_y(y_i|X;\beta,\sigma^2)$$
+
+$$=\prod_{i=1}^{p}(2\pi \sigma^2)^{-1/2}exp(-\frac{1}{2}\frac{(y_i-x_i\beta)^2}{\sigma^2})$$
+$$=(2\pi \sigma^2)^{-N/2}exp(-\frac{1}{2\sigma^2}\sum_{i=1}^p (y_i-x_i\beta)^2)$$
+
+### - Mostrar que la solución de máxima verosimilitud es la misma que la del problema de mínimos cuadrados.
+La función log de máxima verosimilitud es:
+$$l(\beta,\sigma^2;Y,X)=-\frac{N}{2}ln(2\pi)-\frac{N}{2}ln(\sigma^2)-\frac{1}{2\sigma^2}\sum_{i=1}^{N}(y_i-x_i\beta)^2$$
+El siguiente paso es derivar respecto a cada una de las $\beta$: 
+$$\bigtriangledown_\beta l(\beta,\sigma^2;Y,X)$$
+
+$$\bigtriangledown_\beta(-\frac{N}{2}ln(2\pi)-\frac{N}{2}ln(\sigma^2)-\frac{1}{2\sigma^2}\sum_{i=1}^{N}(y_i-x_i\beta)^2)$$
+
+$$=\frac{1}{\sigma^2}\sum^N_{i=1}x_i^T(y_i-x_i\beta)$$
+$$=\frac{1}{\sigma^2}(\sum^N_{i=1}x_i^Ty_i -\sum^N_{i=1}x_i^Tx_i\beta)$$
+Que es igual a cero solo si
+
+$$\sum^N_{i=1}x_i^Ty_i -\sum^N_{i=1}x_i^Tx_i\beta=0$$
+Esto se satisface si:
+$$\beta=(\sum_{i=1}^Nx_i^Tx_i)^{-1}\sum_{i=1}^Nx_i^Ty_i=(X^TX)^{-1}X^Ty$$
+### - Investiga el contenido del Teorema de Gauss-Markov sobre mínimos cuadrados.
+
+El Teorema de Gauss-Márkov establece que en un modelo lineal general (MLG) en el que se cumplan los siguientes supuestos:
+- Correcta especificación: el MLG ha de ser una combinación lineal de los parámetros$\beta$
+y no necesariamente de las variables: $Y=X\beta+u$
+- Muestreo aleatorio simple: la muestra de observaciones del vector $(y_{i},\,x_{2i},\,x_{3i},\,\dots ,\,x_{ki})$ es una muestra aleatoria simple y, por lo tanto, el vector $(y_{i},X'_{i})$  es independiente del vector $(y_{i},X'_{j})$  
+- Esperanza condicionada de los errores nula: $E(u_{i}|X'_{i})=0$
+- Correcta identificación: la matriz de regresoras (X) ha de tener rango completo: rg(X)=K<=N
+- Homocedasticidad: la varianza del error condicional a las variables explicativas es constante a lo largo de las observaciones:$Var(U|X)=\alpha^{2}I$
+ 
+El estimador mínimo cuadrático ordinario (MCO) de $\beta$ es el estimador lineal e insesgado óptimo, es decir, el estimador MCO es el estimador eficiente dentro de la clase de estimadores lineales e insesgados.
+
+
+## Parte aplicada
+
+### Para esta parte pueden usar la base de datos diamonds que sugirieron, aunque hay puntos adicionales si usan alguna base original interesante.
+
+### Cargar la base que se encuentra en el paquete ggplot2. Los comandos que pueden usar para cargar la base diamonds a su ambiente de trabajo en R son:
+
+```{r}
+#install.packages("ggplot2")
+library(ggplot2)
+data(diamonds)
+head(diamonds)
+?diamonds
+```
+
+Ahora vamos a crear un nuevo data frame que solo contiene las variables numéricas centralizadas.
+
+```{r}
+diamantes = diamonds[ ,c(1,5,6,7,8,9,10)]
+diamantes0 = scale(diamantes)
+diamantes0 <- as.data.frame(diamantes0)
+```
+
+Obtenemos una matriz de dispersión para formarnos una apreciación inicial de las relaciones entre las variables.
+
+```{r}
+pairs(diamantes0, col= "blue", main="Matriz de dispersión de las variables numéricas")
+```
+
+En la matriz de gráficas podemos ver de manera rápida que la variables que más se relacionan con  el precio son carat.
+
+Ahora vamos a correr la regresión lineal:
+
+```{r}
+modelo1 = lm(price ~ carat + depth + table + x + y + z, data = diamantes0)
+summary(modelo1)
+plot(modelo1, which =1)
+```
+
+
+### - ¿Qué tan bueno fue el ajuste?
+
+R= En el resumen de la regresión podemos ver los residuales, que son las diferencias entre el precio estimado y el precio real; donde una media lo más cercana a cero es lo ideal, pues indicaría que el modelo se ajusta a la perfección. En la gráfica vemos los valores predichos contra los residuales, en un modelo perfecto, la media de los residuales sería 0 por lo que los puntos y la línea roja irían perfectamente a lo largo de la línea que representa el 0. En seguida podemos apreciar los coeficientes de la intercepción y de cada una de las variables, usados para calcular las predicciones.Así también confirmamos que las variables "z" y "y" son las menos importantes para el modelo, esto lo sabemos por el valor p en la columna "Pr(>|t|)", que se resta a 1 para conocer la probabilidad de que no sean relevantes al modelo, es decir, lo que buscamos es que este sea lo más pequeño posible. 
+
+
+- ¿Qué medida puede ayudarnos a saber la calidad del ajuste? ¿Cúal fue el valor de $ \sigma^2 $ que ajustó su modelo y que relación tienen con la calidad del ajuste?
+
+R= En el resumen podemos ver la R cuadrada, que es la cantidad explicada por el modelo, en este caso un 85.92 % del precio de los diamantes es explicado por las variables en nuestro modelo. Es una buena medida de la calidad del ajuste.
+
+```{r}
+# Por curiosidad, realizamos otra regresión lineal, dejando fuera a "y" y "z", que no aportaban mucho en el modelo anterior
+modelo2 = lm(price ~ carat + depth + table + x, data = diamantes)
+summary(modelo2)
+plot(modelo2, which=1)
+```
+
+Aqui vemos, como era esperado, que deshacernos de las dos variables que no eran relevantes prácticamente no modifica valores como la media de los residuales o la R cuadrada.
+
+```{r}
+# Por curiosidad, ahora realizamos otra regresión lineal, pero ahora dejamos fuera la variable "carat", que es una variable relevante para el modelo
+modelo3 = lm(price ~ depth + table + x + y + z, data = diamantes)
+summary(modelo3)
+plot(modelo3, which=1)
+```
+
+Como era esperado, remover una variable importante, disminuyó el valor de R cuadrada y aumentó la media de los residuales (cuyo efecto puede verse en la recta de la gráfica).
+
+- ¿Cual es el angulo entre $Y$ y $\hat{Y}$ estimada? Hint: usen la $R^2$ cuadrada y el arcocoseno
+```{r}
+angulo <- acos(sqrt(.8592))
+angulo * 180/pi
+```
+

@@ -1,0 +1,229 @@
+---
+title: "Tarea_3"
+author: "Francisco Bahena 123084"
+date: "July 16, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Parte Teórica
+
+Se tiene la matriz de datos $X = \big[ X^1, X^2, ... X^p \big]$ dónde cada columna $X^i$ es la variable $i$ y cada fila de $X$ es una observación. $X$ es de la forma $n$  x  $p$
+
+Se tiene el vector de altura $Y$, queremos encontrar el vector de $\beta$ tal que podamos explicar $Y$ con la forma $$ Y   =  \beta  X + \epsilon $$
+
+
+* Planteamiento del problema de minimización de errores al cuadrado y solución teórica.
+
+El error de predicción sería $|| Y - \hat{Y}||$. Si queremos minimizar el error necesitamos encontrar:  $$ argmin_{(\beta)} (|| Y - \beta  X||)^2 $$ 
+
+
+La función de errores al cuadrado se puede escribir como $E^2  = (Y-\beta X)^T(Y-\beta X)$
+
+
+Las condiciones de primer orden implican que:
+
+
+$$ \frac{\partial E^2}{\partial \beta} = -2YX^T + 2X^TX\beta = 0 $$
+
+Resolviendo para $\beta$ obtenemos: 
+$$ \beta = (X^TX)^{-1}X^TY  $$ 
+con $\beta$ de la forma $1$ x $p$
+
+
++ Por qué es un ajuste lineal? Se puede ajustar a polinomios de la forma $Y = x^2$ ?
+
+
+Por que el planteamiento que asumimos es de explicar la relación de  $Y$ con $X$ es:  $$ Y_i = \beta_{1}X_{i}^{1}+\beta_{2}X_{i}^{2}+...\beta_{P}X_{i}^{P} $$ con $i \in \{ 1,...,n \}$
+
+El planteamiento exige que el modelo sea lineal en los parámetros (vector de $\beta$), no las variables explicativas, por lo que podemos usarlo para ajustar a polinomios de la forma $Y = x^2$
+
+
++ Argumentar la relación entre la solución encontrada y un problema de proyección en subespacios vectoriales de algebra lineal. Qué relación hay con el teorema de Pitágoras?
+
+
+Buscamos encontrar el vector de $\beta$ para obetener la combinación lineal del espacio columnar de X  mediante la cual se cumpla $$ Y = \beta X $$ 
+
+
+Sin embargo, si no puedes encontrar $Y$ en términos de combinaciones lineales de las columnas de $X$, puedes aproximarla con el método de OLS, el cual te da el vector de $\beta$ tal que generas $$ \hat{Y} = \beta X$$ donde $\hat{Y}$ está en el espacio columnar de X y se cumple que el error $ || Y - \hat{Y} || $ es el mínimo.
+
+
+La razón por la que el error es el mínimo es por que se cumple que el vector de error 
+$Y-\hat{Y}$ es ortogonal al vector $\hat{Y}$, generando un triángulo rectangulo dónde se cumple que:  
+$$ || Y || = || \hat{Y} || + || Y - \hat{Y}|| $$ 
+La hipotenusa es $|Y|$, el c.a es $|\hat{Y}|$ y el c.o es $ |Y-\hat{Y}|$
+
+Otra forma de verlo es que la distancia más corta de $Y$ al espacio columnar de $X$ no es otra más que el vector ortogonal $Y - \beta X$, donde la distancia más corta es también el error mínimo. 
+
+
++ Qué logramos al añadir una columna de $1s$ a la matriz $X$ ?
+
+
+La columna de 1s mejora la estimación de $Y$ con un parámetro $\beta_0$  ya que deja de forzar que el espacio generado por las columnas de $X$ pase por el origen.
+
+
+* Plantear ahora como un problema de estadística 
+
+
+El problema en forma vectorial es:
+
+$$   Y = X \beta + \varepsilon $$
+
+Eso implica 
+
+$$\Rightarrow \epsilon = Y - X\beta $$
+
+con  $E\big[ \epsilon \big] = 0$ y $Var(\epsilon) = \sigma^{2}I_n$
+
+y que son los parámetros de una normal tal que:  $\epsilon \sim N(0,\sigma^2I_n)$
+
+si $Y = \epsilon + X\beta$ entonces $E\big[Y\big] = E\big[\epsilon\big] + E\big[X\beta\big]$
+
+eso implica $E\big[Y\big] = 0 + E\big[X\beta\big] \Rightarrow E\big[Y\big] = X\beta$
+
+En cuanto a $Var(Y) = Var(\epsilon + X\beta) $ $\Rightarrow Var(Y) = Var(\epsilon) + Var(X\beta) + 2Cov(\epsilon,X\beta)$
+
+Donde 
+
+$Cov(\epsilon,X\beta) = E\big[ (\epsilon - E[\epsilon])(X\beta - E[X\beta]) \big]$
+
+eso implica $Cov(\epsilon,X\beta) = E\big[ (\epsilon - E[\epsilon])(X\beta - X\beta) \big] = E\big[ (\epsilon)(0) \big] = 0$
+
+y aparte sabemos que 
+
+$Var(X\beta) = 0$ lo cual nos permite afirmar que $Var(Y) = Var(\epsilon) = \sigma^2I_n$
+
+Entonces, por propiedades de la normal 
+
+$$ Y = \epsilon + X\beta \sim N(X\beta,\sigma^2I_n) $$
+
+* Cuál es la función de verosimilitud del problema anterior ?
+
+$$ L( \beta, \sigma^2;X) = \prod \frac{1} { \sqrt{2 \pi \sigma^{2}}} e^{- \frac{(Y-X\beta)^{T}(Y-X\beta)}{2\sigma^{2}}}$$
+
++ Le aplicamos la función de logaritmo para facilitar la derivación de las CPO.
+
+$$ log( L( \beta, \sigma^2;X)) = - \frac{1}{ \sqrt{2 \pi \sigma^{2}}}- \frac{(Y-X \beta)^{T}(Y-X \beta)}{2 \sigma^{2}} $$
+Lo cual te lleva a la CPO.
+
+$$  X^T(Y-X^{T} \beta) = 0 $$
+$$ X^TY -XX^{T} \beta = 0$$
+
+Reescrito, es la misma CPO que la minimización de los errores al cuadrado !!!!!
+
+$$  \beta = [X^{T}X]^{-1}X^{T}Y $$
+
+
+
+
+
+* Cuál es el teorema de Gauss-Markov ? 
+
+El teorema de Gauss-Markov establece que, en un modelo de regresión lineal,  si los errores tienen media de 0 ($E[\epsilon] = 0$), no están correlacionados entre sí y tienen la misma varianza $\sigma^2$ el mejor estimador lineal
+insesgado de los coeficientes $\beta$ está dado por la minimización de los errores al cuadrado (OLS) siempre que ésta exista.
+
+Nota: Esto no implica que la distribución de $\epsilon$ necesariamente sea normal
+
+# Parte Técnica 
+
+
+``` {r}
+
+library(ggplot2)
+data(diamonds)
+head(diamonds)
+
+base <- diamonds[,c(1,5,6,7,8,9,10)]
+
+```
+
+Ahora visualizaremos los diagramas de dispersión de precio
+contra las demás vaiables numéricas 
+
+
+
+``` {r}
+
+require(GGally)
+require(ggplot2)
+
+my_fn <- function(data, mapping, ...){
+  p <- ggplot(data = data, mapping = mapping) + 
+    geom_point()  +
+    geom_smooth(method=lm, fill="blue", color="blue", ...)
+  p
+}
+
+g = ggpairs(base,columns = 1:7 , lower = list(continuous = my_fn))
+g
+
+```
+
+
+Corremos el análisis de regresión lineal
+
+``` {r}
+
+
+fit <- lm( price ~ ., data= diamonds)
+summary(fit) 
+
+
+```
+
+
+
+#### q-plot
+Hacemos una gráfica q-plot para ver los valores observados contra los del modelo
+
+``` {r}
+
+qplot( fit$fitted.values, diamonds$price, main = "Modelo vs. Valores observados", geom =c("point","smooth") )
+
+```
+
+### Conclusiones sobre el ajuste 
+
+Tanto la R^2 como la ajustada son cercanos a uno, lo cual indica un buen ajuste ya que implica
+que el modelo capta un gran porcentaje de la varianza de los datos reales. Asimismo, podemos firmar que gran parte de los coeficientes de regresión son significativos, (muy distintos de cero) lo que 
+implica que para efectos del precio, variables como el carat, cut o depth  tienen una relación.
+
+
+
+* Cuál es el ángulo entre $Y$ y $\hat{Y}$
+
+Definimos una funcion que genera la norma. 
+
+Buscamos $\theta$ tal que  $cos(\theta) = \frac{||\hat{Y}||}{||Y||}$
+
+``` {r}
+
+norm_vec <- function(x) sqrt(sum(x^2))
+
+Y <- diamonds$price
+Ygorro <- fit$fitted.values
+
+norma_Y = norm_vec(Y)
+norma_Ygorro = norm_vec(Ygorro)
+
+ratio <- norma_Ygorro / norma_Y
+
+teta <- acos(ratio)
+
+print('El ángulo teta es : ')
+teta
+
+```
+
+
+
+
+
+
+
+
+
+
