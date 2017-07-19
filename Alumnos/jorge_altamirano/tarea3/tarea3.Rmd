@@ -4,8 +4,14 @@ author: "Jorge III Altamirano Astorga"
 date: "July 16, 2017"
 output:
   pdf_document: default
-  html_document: default
+  html_notebook: default
 ---
+```{r}
+#output:
+  #pdf_document: default
+  #html_document: default
+```
+
 
 # Tarea 3
 Jorge III Altamirano Astorga
@@ -140,7 +146,7 @@ $$\hat{\beta} = argmin_{\beta \in R^p}\mid\mid Y - X\beta \mid\mid^2 $$
 ### y encontrar la solución teórica. ¿Por qué este planteamiento nos da un ajuste lineal a nuestros datos? 
 
 
-La solución del problema de mínimos cuadrados nos da una aproximación lineal a nuestros datos porque los parámetros $\beta $ son lineales. Esto es, los parámetros capturan sólo la parte lineal que nos ayuda a explicar la variable 'Y' a partir de nuestros datos 'X'. Por ejemplo, en el caso de dos dimensiones donde estimamos la variable Y a partir de la ecuación Y_hat = B_0 + B_1*X, el modelo se asemeja a una recta donde el parámetro B_0 representa la ordenada al origen de dicha recta y B_1 captura la pendiente o relación lineal entre las variables X y Y
+La solución del problema de mínimos cuadrados nos da una aproximación lineal a nuestros datos porque los parámetros $\beta$ son lineales. Esto es, los parámetros capturan sólo la parte lineal que nos ayuda a explicar la variable 'Y' a partir de nuestros datos 'X'. Por ejemplo, en el caso de dos dimensiones donde estimamos la variable Y a partir de la ecuación Y_hat = B_0 + B_1*X, el modelo se asemeja a una recta donde el parámetro B_0 representa la ordenada al origen de dicha recta y B_1 captura la pendiente o relación lineal entre las variables X y Y
 
 ### ¿Podríamos usarlo para ajustar polinomios (ej $y = x^2$)?
 
@@ -198,7 +204,7 @@ $$\beta=(\sum_{i=1}^Nx_i^Tx_i)^{-1}\sum_{i=1}^Nx_i^Ty_i=(X^TX)^{-1}X^Ty$$
 ### - Investiga el contenido del Teorema de Gauss-Markov sobre mínimos cuadrados.
 
 El Teorema de Gauss-Márkov establece que en un modelo lineal general (MLG) en el que se cumplan los siguientes supuestos:
-- Correcta especificación: el MLG ha de ser una combinación lineal de los parámetros$\beta$
+- Correcta especificación: el MLG ha de ser una combinación lineal de los parámetros $ \beta $
 y no necesariamente de las variables: $Y=X\beta+u$
 - Muestreo aleatorio simple: la muestra de observaciones del vector $(y_{i},\,x_{2i},\,x_{3i},\,\dots ,\,x_{ki})$ es una muestra aleatoria simple y, por lo tanto, el vector $(y_{i},X'_{i})$  es independiente del vector $(y_{i},X'_{j})$  
 - Esperanza condicionada de los errores nula: $E(u_{i}|X'_{i})=0$
