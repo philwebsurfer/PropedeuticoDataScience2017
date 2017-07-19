@@ -2,7 +2,9 @@
 title: "Tarea3"
 author: "Jorge III Altamirano Astorga"
 date: "July 16, 2017"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 # Tarea 3
@@ -122,7 +124,9 @@ head(funcLikelyhood(beta1,sigma_sq))
 
 ### - Utilicen la función optim de R para numericamente el máximo de la función de verosimilitud. Si lo hacen correctamente, su solución debe coincidir con la del método lm.
 
-## Parte teórica *basado en el desarrollo de Alejandro Estrada*
+## Parte teórica 
+
+*Basado en el desarrollo matemático de Alejandro Estrada y contribuciones de trabajo en equipo de estudio del domino 16 de Julio*
 
 ### Esta parte del proyecto será sobre regresión lineal. Supongamos que quieren explicar una variable estadistica Y (por ejemplo altura) utiizando la información de p variables X1, ..., Xp (peso, ancho de huesos, etc). Si se toma una muestra de N individuos, cada variable está representada por un vector de tamaño N. La información de las variables explicativas se pueden juntar en una matriz
 $$ X = [X^1\mid...\mid X^p] $$
